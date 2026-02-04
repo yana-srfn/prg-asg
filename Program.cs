@@ -12,7 +12,7 @@ using System.Linq;
 
 
 // 1.
-List<Restaurant> restaurants = new List<Restaurant>();
+List<Restaurant> restaurants = new List<Restaurant>(); // haven't pull the class needed in github yet
 // Feature 1: List restaurants & food items
 foreach (var r in restaurants)
 {
@@ -31,7 +31,7 @@ foreach (var r in restaurants)
 //4
 Console.WriteLine("OrderID  Customer        Restaurant       Delivery Time        Amount   Status");
 
-foreach (var o in allOrders)
+foreach (var o in Orders) // haven't pull the class needed in github yet
 {
     Console.WriteLine(
         $"{o.OrderId,-7} " +
