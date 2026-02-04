@@ -51,7 +51,7 @@ namespace PRGAssignment
         static List<FoodItem> foodItems = new List<FoodItem>();
         static List<Order> orders = new List<Order>();
 
-        //Feature 2: Load CSV Files
+        //DAYANA=Feature 2: Load CSV Files
         static void LoadCustomers(string filePath = @"Data-Files\customers.csv")
         {
             customers.Clear();
@@ -159,7 +159,7 @@ namespace PRGAssignment
             Console.WriteLine($"{orders.Count} orders loaded.");
         }
 
-        //Feature 3: List Restaurants & Menu
+        //DAYANA=Feature 3: List Restaurants & Menu
         static void ListRestaurants()
         {
             Console.WriteLine("\nAll Restaurants and Menu Items");
@@ -174,7 +174,7 @@ namespace PRGAssignment
             }
         }
 
-        //Feature 5: Create New Order
+        //DAYANA=Feature 5: Create New Order
         static void CreateOrder()
         {
             Console.Write("Enter Customer Email: ");
