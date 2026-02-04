@@ -60,3 +60,5 @@ namespace PRGAssignment
         static List<FoodItem> foodItems = new List<FoodItem>();
         static List<Order> orders = new List<Order>();
         static List<SpecialOffer> specialOffers = new List<SpecialOffer>();
+    }
+}
