@@ -9,6 +9,7 @@ namespace PRGAssignment
     class Program
     {
         //Classes
+
         public class Customer
         {
             public string Name { get; set; }
@@ -45,10 +46,17 @@ namespace PRGAssignment
             public string Status { get; set; }
         }
 
-        //Lists 
+        public class SpecialOffer
+        {
+            public string RestaurantId { get; set; }
+            public string OfferCode { get; set; }
+            public string Description { get; set; }
+            public decimal DiscountAmount { get; set; }
+        }
+
+        // ==================== Lists ====================
         static List<Customer> customers = new List<Customer>();
         static List<Restaurant> restaurants = new List<Restaurant>();
         static List<FoodItem> foodItems = new List<FoodItem>();
         static List<Order> orders = new List<Order>();
-
-
+        static List<SpecialOffer> specialOffers = new List<SpecialOffer>();
