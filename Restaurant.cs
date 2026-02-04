@@ -6,7 +6,22 @@ using System.Threading.Tasks;
 
 namespace prg_asg
 {
-    internal class Restaurant
+    class Restaurant
     {
+        public string Id { get; }
+        public string Name { get; }
+        public string Email { get; }
+
+        public List<FoodItem> FoodItems { get; }
+        public Queue<Order> OrderQueue { get; }
+
+        public Restaurant(string id, string name, string email)
+        {
+            Id = id;
+            Name = name;
+            Email = email;
+            FoodItems = new List<FoodItem>();
+            OrderQueue = new Queue<Order>();
+        }
     }
 }
