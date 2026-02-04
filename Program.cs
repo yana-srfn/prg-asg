@@ -189,8 +189,10 @@ namespace PRGAssignment
             Console.Write("Enter Restaurant ID: ");
             string restId = Console.ReadLine();
             var rest = restaurants.FirstOrDefault(r => r.RestaurantId == restId);
-            static void CreateOrder()
-            {
-                Console.WriteLine("Feature 5 - CreateOrder() TODO: implement fully.");
-            }
+
+
+
+
+
+
         }
