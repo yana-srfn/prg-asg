@@ -30,6 +30,9 @@ namespace PRGAssignment
             {
                 string[] cols = lines[i].Split(',');
 
+                if (cols.Length < 2)
+                    continue;
+
                 Customer c = new Customer
                 {
                     Name = cols[0],
@@ -39,6 +42,7 @@ namespace PRGAssignment
                 customers.Add(c);
             }
         }
+
 
         static void LoadOrders()
         {
