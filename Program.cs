@@ -331,10 +331,164 @@ void ProcessOrder(List<Restaurant> restaurants, Stack<Order> refundStack)
                 Console.WriteLine("Cannot deliver. Only Preparing orders can be delivered.");
             }
         }
-        // 6) Put the order back into the queue so the queue is preserved (important for saving queue.csv later)
+        // Put the order back into the queue so the queue is preserved (important for saving queue.csv later)
         selectedRestaurant.OrderQueue.Enqueue(currentOrder);
     }
 }
 
 //8
+// Find customer by email
+Customer FindCustomerByEmail(List<Customer> customers, string email)
+{
+    for (int i = 0; i < customers.Count; i++)
+    {
+        if (customers[i].Email == email)
+            return customers[i];
+    }
+    return null; // not found
+}
+// Find a specific order (only if it is Pending) This ensures Feature 8 only cancels orders that are still Pending
+Order FindPendingOrder(Customer customer, string orderId)
+{
+    for (int i = 0; i < customer.OrderList.Count; i++)
+    {
+        Order o = customer.OrderList[i];
 
+        // Must match order id AND must be Pending
+        if (o.OrderId == orderId && o.Status == "Pending")
+            return o;
+    }
+    return null; // not found / not pending
+}
+// Cancel (delete) an existing order for a customer
+// Only Pending orders can be cancelled
+// Cancelled orders are pushed into refundStack for refund tracking
+void DeleteOrder(List<Customer> customers, Stack<Order> refundStack)
+{
+    Console.WriteLine("\nDelete Order");
+    Console.WriteLine("========================");
+
+    //Ask for customer email
+    Customer customer = null;
+    while (customer == null)
+    {
+        Console.Write("Enter Customer Email: ");
+        string email = Console.ReadLine();
+
+        // email cannot be empty
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            Console.WriteLine("Email cannot be empty.");
+            continue;
+        }
+
+        // Trim removes accidental spaces
+        email = email.Trim();
+
+        // Find customer
+        customer = FindCustomerByEmail(customers, email);
+        if (customer == null)
+            Console.WriteLine("Invalid customer email. Try again.");
+    }
+
+    //Display ALL Pending order IDs for that customer
+    Console.WriteLine("\nPending Orders:");
+    bool hasPending = false;                    //used to check whether the customer has ANY pending orders at all before asking them to cancel one.
+    for (int i = 0; i < customer.OrderList.Count; i++)
+    {
+        if (customer.OrderList[i].Status == "Pending")
+        {
+            Console.WriteLine(customer.OrderList[i].OrderId);
+            hasPending = true;
+        }
+    }
+
+    // If no pending orders, nothing to delete
+    if (!hasPending)
+    {
+        Console.WriteLine("No pending orders to delete.");
+        return;
+    }
+
+    //Ask for Order ID
+    Order targetOrder = null;
+    while (targetOrder == null)
+    {
+        Console.Write("\nEnter Order ID to cancel: ");
+        string orderId = Console.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(orderId))
+        {
+            Console.WriteLine("Order ID cannot be empty.");
+            continue;
+        }
+
+        orderId = orderId.Trim();
+
+        // Find order only if it is Pending
+        targetOrder = FindPendingOrder(customer, orderId);
+
+        if (targetOrder == null)
+            Console.WriteLine("Invalid Order ID OR it is not Pending. Try again.");
+    }
+
+    // Show order details
+    Console.WriteLine($"Customer: {customer.Name}");
+
+    Console.WriteLine("Ordered Items:");
+    if (targetOrder.Items != null && targetOrder.Items.Count > 0)
+    {
+        for (int k = 0; k < targetOrder.Items.Count; k++)
+        {
+            FoodItem fi = targetOrder.Items[k].Item;
+            int qty = targetOrder.Items[k].Quantity;
+
+            string itemName = (fi != null) ? fi.GetItemName() : "-";
+            Console.WriteLine($" {k + 1}. {itemName} x {qty}");
+        }
+    }
+    else
+    {
+        Console.WriteLine(" (No items)");
+    }
+    Console.WriteLine($"Delivery date/time: {targetOrder.DeliveryDateTime:dd/MM/yyyy HH:mm}");
+    Console.WriteLine($"Total Amount: ${targetOrder.TotalAmount:0.00}");
+    Console.WriteLine($"Order Status: {targetOrder.Status}");
+
+    //Confirm cancel
+    while (true)
+    {
+        Console.Write("Confirm cancellation? [Y/N]: ");
+        string ans = Console.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(ans))
+            continue;
+
+        ans = ans.Trim().ToUpper();
+
+        //No
+        if (ans == "N")
+        {
+            Console.WriteLine("Cancellation aborted.");
+            return; // exit feature
+        }
+        //Yes
+        else if (ans == "Y")
+        {
+            break; // continue to cancel
+        }
+        else
+        {
+            Console.WriteLine("Invalid input. Enter Y or N.");
+        }
+    }
+    //Update order status to Cancelled
+    targetOrder.Status = "Cancelled";
+
+    //Push into refund stack to track refund
+    refundStack.Push(targetOrder);
+
+    //Show confirmation
+    Console.WriteLine($"\nOrder {targetOrder.OrderId} cancelled.");
+    Console.WriteLine($"Refund of ${targetOrder.TotalAmount:0.00} processed.");
+}
