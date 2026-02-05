@@ -65,6 +65,15 @@ void LoadOrders(string path)
 {
     // read orders.csv
 }
+void PrintStartupMessage(int restaurantCount, int foodItemCount, int customerCount, int orderCount)
+{
+    Console.WriteLine("Welcome to the Gruberoo Food Delivery System");
+    Console.WriteLine($"{restaurantCount} restaurants loaded!");
+    Console.WriteLine($"{foodItemCount} food items loaded!");
+    Console.WriteLine($"{customerCount} customers loaded!");
+    Console.WriteLine($"{orderCount} orders loaded!");
+    Console.WriteLine();
+}
 
 LoadRestaurants("restaurants.csv");
 LoadCustomers("customers.csv");
