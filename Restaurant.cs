@@ -81,11 +81,20 @@ namespace PRGAssignment
         // (These are in diagram but you can implement later)
         public void DisplayOrders()
         {
-            Console.WriteLine(order);
+            foreach (Order order in orderQueue)
+            {
+                Console.WriteLine(order);
+            }
         }
         public void DisplaySpecialOffers()
         {
-            Console.WriteLine();
+            foreach(Order order in orderQueue)
+            {
+                if(Order.SpecialOffer !=null)
+                {
+                    Console.WriteLine(order.SpecialOffer);
+                }
+            }
         }
 
         public override string ToString()
