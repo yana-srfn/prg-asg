@@ -6,28 +6,27 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using PRGAssignment;
 
-namespace PRGAssignment
+
+//Lists (from master)
+public static List<Customer> CustomerName = new List<Customer>();
+public static List<Restaurant> restaurants = new List<Restaurant>();
+public static List<FoodItem> foodItems = new List<FoodItem>();
+public static List<Order> orders = new List<Order>();
+public static List<SpecialOffer> specialOffers = new List<SpecialOffer>();
+
+static void Main(string[] args)
 {
-    class Program
-    {
-        //Lists (from master)
-        public static List<Customer> customers = new List<Customer>();
-        public static List<Restaurant> restaurants = new List<Restaurant>();
-        public static List<FoodItem> foodItems = new List<FoodItem>();
-        public static List<Order> orders = new List<Order>();
-        public static List<SpecialOffer> specialOffers = new List<SpecialOffer>();
+    LoadCustomers();
+    LoadOrders();
 
-        static void Main(string[] args)
-        {
-            LoadCustomers();
-            LoadOrders();
+    Console.WriteLine("Data loaded successfully.");
+}
 
-            Console.WriteLine("Data loaded successfully.");
-        }
 
-        //Feature 2: Load CSVs
-        static void LoadCustomers()
+//Feature 2: Load CSVs
+static void LoadCustomers()
         {
             string[] lines = File.ReadAllLines("Data-Files/customers.csv");
 
@@ -40,82 +39,80 @@ namespace PRGAssignment
 
                 Customer c = new Customer
                 {
-                    Name = cols[0],
+                    CustomerName = cols[0],
                     Email = cols[1]
                 };
 
-                customers.Add(c);
+        CustomerName.Add(c);
             }
         }
 
+static void LoadOrders()
+{
+    string[] lines = File.ReadAllLines("Data-Files/orders.csv");
 
-        static void LoadOrders()
+    for (int i = 1; i < lines.Length; i++)
+    {
+        string[] cols = lines[i].Split(',');
+
+        if (cols.Length < 10)
+            continue;
+
+        Order o = new Order
         {
-            string[] lines = File.ReadAllLines("Data-Files/orders.csv");
+            OrderId = cols[0],
+            DeliveryAddress = cols[5],
+            Status = cols[8]
+        };
 
-            for (int i = 1; i < lines.Length; i++)
-            {
-                string[] cols = lines[i].Split(',');
-
-                if (cols.Length < 10)
-                    continue;
-
-                Order o = new Order
-                {
-                    OrderId = cols[0],
-                    DeliveryAddress = cols[5],
-                    Status = cols[8]
-                };
-
-                if (decimal.TryParse(cols[7], out decimal total))
-                {
-                    o.TotalAmount = total;
-                }
-                else
-                {
-                    o.TotalAmount = 0m;
-                }
-
-                orders.Add(o);
-            }
-        }
-
-
-        //Feature 3: List Restaurants & Menu
-        static void ListRestaurants()
+        if (decimal.TryParse(cols[7], out decimal total))
         {
-            foreach (var r in restaurants)
-            {
-                Console.WriteLine($"Restaurant: {r.Name} ({r.RestaurantId})");
-
-                foreach (var f in r.MenuItems)
-                {
-                    Console.WriteLine($"- {f.ItemName}: {f.Description} - ${f.Price:F2}");
-                }
-
-                Console.WriteLine();
-            }
+            o.TotalAmount = total;
         }
-
-        //Feature 5: Create New Order 
-        static void CreateNewOrder(Customer customer, Restaurant restaurant, List<FoodItem> items, string deliveryAddress)
+        else
         {
-            Order newOrder = new Order
-            {
-                OrderId = Guid.NewGuid().ToString(), //WHATS GUID?
-                Customer = customer,
-                Restaurant = restaurant,
-                Items = items,
-                DeliveryAddress = deliveryAddress,
-                Status = "Pending",
-                TotalAmount = 0m
-            };
-            foreach (var item in foodItems)
-            {
-                newOrder.TotalAmount += item.Price;
-            }
-            orders.Add(newOrder);
-            Console.WriteLine($"New order created with ID: {newOrder.OrderId}, Total Amount: ${newOrder.TotalAmount:F2}");
+            o.TotalAmount = 0m;
         }
+
+        orders.Add(o);
     }
 }
+
+
+//Feature 3: List Restaurants & Menu
+static void ListRestaurants()
+{
+    foreach (var r in restaurants)
+    {
+        Console.WriteLine($"Restaurant: {r.Name} ({r.RestaurantId})");
+
+        foreach (var f in r.MenuItems)
+        {
+            Console.WriteLine($"- {f.ItemName}: {f.Description} - ${f.Price:F2}");
+        }
+
+        Console.WriteLine();
+    }
+}
+
+//Feature 5: Create New Order 
+static void CreateNewOrder(Customer customer, Restaurant restaurant, List<FoodItem> items, string deliveryAddress)
+{
+    Order newOrder = new Order
+    {
+        OrderId = Guid.NewGuid().ToString(), //WHATS GUID?
+        CustomerName = customer,
+        Restaurant = restaurant,
+        Items = items,
+        DeliveryAddress = deliveryAddress,
+        Status = "Pending",
+        TotalAmount = 0m
+    };
+    foreach (var item in foodItems)
+    {
+        newOrder.TotalAmount += item.Price;
+    }
+    orders.Add(newOrder);
+    Console.WriteLine($"New order created with ID: {newOrder.OrderId}, Total Amount: ${newOrder.TotalAmount:F2}");
+}
+

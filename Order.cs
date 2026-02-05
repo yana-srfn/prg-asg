@@ -5,13 +5,27 @@ namespace PRGAssignment
 {
     public class Order
     {
-        public string OrderId { get; set; }
-        public Customer Customer { get; set; }
-        public Restaurant Restaurant { get; set; }
-        public DateTime DeliveryDateTime { get; set; }
-        public string DeliveryAddress { get; set; }
-        public List<(FoodItem Item, int Quantity)> Items { get; set; } = new List<(FoodItem, int)>();
-        public decimal TotalAmount { get; set; }
-        public string Status { get; set; }
+        private int orderId;
+        private DateTime orderDateTime;
+        private double orderTotal;
+        private string orderStatus;
+        private DateTime deliveryDateTime;
+        private string deliveryAddress;
+        private string orderPaymentMethod;
+        private bool orderPaid;
+
+
+        public int OrderId { get; set; }
+        public double CalculateOrderTotal() { return orderTotal; }
+        public void AddOrderedFoodItem(FoodItem item, int quantity) { }
+
+        public bool RemoveOrderedFoodItem(FoodItem item) { return true; }
+        public void DisplayOrderedFoodItems() { }
+
+        public override string ToString()
+        {
+            return $"Order ID: {OrderId}, Total Amount: {orderTotal}, Status: {orderStatus}";
+        }
+
     }
 }
