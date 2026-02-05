@@ -1,3 +1,8 @@
+//==========================================================
+// Student Number : S10275337C
+// Student Name : Dayana Sharafeena
+// Partner Name : Ng Sook Min Calista
+//==========================================================
 using System;
 using System.Collections.Generic;
 using System.IO;
