@@ -32,8 +32,8 @@ namespace PRGAssignment
 
                 Customer c = new Customer
                 {
-                    Name = cols[1],
-                    Email = cols[2]
+                    Name = cols[0],
+                    Email = cols[1]
                 };
 
                 customers.Add(c);
