@@ -10,11 +10,11 @@ using PRGAssignment;
 
 
 //Lists (from master)
-public static List<Customer> CustomerName = new List<Customer>();
-public static List<Restaurant> restaurants = new List<Restaurant>();
-public static List<FoodItem> foodItems = new List<FoodItem>();
-public static List<Order> orders = new List<Order>();
-public static List<SpecialOffer> specialOffers = new List<SpecialOffer>();
+List<Customer> customer = new List<Customer>();
+List<Restaurant> restaurants = new List<Restaurant>();
+List<FoodItem> foodItems = new List<FoodItem>();
+List<Order> orders = new List<Order>();
+List<SpecialOffer> specialOffers = new List<SpecialOffer>();
 
 static void Main(string[] args)
 {
@@ -40,10 +40,10 @@ static void LoadCustomers()
                 Customer c = new Customer
                 {
                     CustomerName = cols[0],
-                    Email = cols[1]
+                    EmailAddress = cols[1]
                 };
 
-        CustomerName.Add(c);
+        Customer.Add(c);
             }
         }
 
@@ -61,20 +61,20 @@ static void LoadOrders()
         Order o = new Order
         {
             OrderId = cols[0],
-            DeliveryAddress = cols[5],
-            Status = cols[8]
+            deliveryAddress = cols[5],
+            orderStatus = cols[8]
         };
 
         if (decimal.TryParse(cols[7], out decimal total))
         {
-            o.TotalAmount = total;
+            o.orderTotal = total;
         }
         else
         {
-            o.TotalAmount = 0m;
+            o.orderTotal = 0m;
         }
 
-        orders.Add(o);
+        Orders.Add(o);
     }
 }
 
