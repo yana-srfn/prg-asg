@@ -5,7 +5,7 @@ namespace PRGAssignment
 {
     class Program
     {
-        // ==================== Shared Lists ====================
+        //Shared Lists
         public static List<Customer> customers = new List<Customer>();
         public static List<Restaurant> restaurants = new List<Restaurant>();
         public static List<FoodItem> foodItems = new List<FoodItem>();
