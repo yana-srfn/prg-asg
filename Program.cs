@@ -51,13 +51,19 @@ List<Customer> customers = new List<Customer>();
 List<Order> orders = new List<Order>();
 
 // Load files (your existing load methods)
+void LoadRestaurants(string path)
+{
+    // read restaurants.csv
+}
+
 void LoadCustomers(string path)
 {
-
+    // read customers.csv
 }
-void LoadOrders(string path);
+
+void LoadOrders(string path)
 {
-    Console.WriteLine();
+    // read orders.csv
 }
 
 LoadRestaurants("restaurants.csv");
@@ -65,28 +71,96 @@ LoadCustomers("customers.csv");
 LoadOrders("orders.csv");
 
 //After loading, compute total food items
-int totalFoodItems = GetTotalFoodItemCount(restaurants);
-
-//Print the startup message
-PrintStartupMessage(restaurants.Count, totalFoodItems, customers.Count, orders.Count);
-
-// Then show menu loop...
-void PrintStartupMessage(int restaurantCount, int foodItemCount, int customerCount, int orderCount)
+/*int GetTotalFoodItemCount(List<Restaurant> restaurants)
 {
-    Console.WriteLine("Welcome to the Gruberoo Food Delivery System");
-    Console.WriteLine($"{restaurantCount} restaurants loaded!");
-    Console.WriteLine($"{foodItemCount} food items loaded!");
-    Console.WriteLine($"{customerCount} customers loaded!");
-    Console.WriteLine($"{orderCount} orders loaded!");
+    int total = 0;
+    for (int i = 0; i < restaurants.Count; i++)
+    {
+        total += restaurants[i].menu.foodItems.Count;
+    }
+    return total;
+}*/
+
+
+// Startup output (matches assignment screenshot)
+PrintStartupMessage(
+    restaurants.Count,
+     0,                 // TEMP: food items count
+    customers.Count,
+    orders.Count
+);
+
+// MAIN MENU LOOP
+while (true)
+{
+    Console.WriteLine("===== Gruberoo Food Delivery System =====");
+    Console.WriteLine("1. List all restaurants and menu items");
+    Console.WriteLine("2. List all orders");
+    Console.WriteLine("3. Create a new order");
+    Console.WriteLine("4. Process an order");
+    Console.WriteLine("5. Modify an existing order");
+    Console.WriteLine("6. Delete an existing order");
+    Console.WriteLine("0. Exit");
+    Console.Write("Enter your choice: ");
+
+    string choice = Console.ReadLine();
+    Console.WriteLine();
+
+    if (choice == "1")
+    {
+        // Feature 1 
+        
+    }
+    else if (choice == "2")
+    {
+        // Feature 2
+        
+    }
+    else if (choice == "3")
+    {
+        // Feature 3
+
+    }
+    else if (choice == "4")
+    {
+        // Feature 4
+       
+    }
+    else if (choice == "5")
+    {
+        // Feature 5
+
+    }
+    else if (choice == "6")
+    {
+        // Feature 6
+        
+    }
+    else if (choice == "7")
+    {
+        // Feature 7
+
+    }
+    else if (choice == "0")
+    {
+        Console.WriteLine("Exiting system...");
+        break;
+    }
+    else
+    {
+        Console.WriteLine("Invalid choice. Please try again.");
+    }
+
     Console.WriteLine();
 }
-
+// Stack used for cancelled / rejected orders (Feature 6 & 8)
+Stack<Order> refundStack = new Stack<Order>();
 
 // 1.
 List<Restaurant> restaurants1 = new List<Restaurant>();
 //Load Files
 //Restaurants File 
-void LoadRestaurants(string path)
+void LoadRestaurants1(string path)
 {
     String[] lines = File.ReadAllLines("restaurants.csv");
     for (int i = 1; i < lines.Length; i++)
