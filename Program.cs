@@ -24,22 +24,13 @@ namespace PRGAssignment
             // Interactive menu for features
             while (true)
             {
-                Console.WriteLine("\nSelect Feature:");
-                Console.WriteLine("1. List Restaurants & Menu");
-                Console.WriteLine("2. Create Order");
-                Console.WriteLine("3. Modify Order");
-                Console.WriteLine("0. Exit");
+                Console.WriteLine("\nWelcome to the Gruberoo Food Delivery System");
+                Console.WriteLine("  restaurants loaded!");
+                Console.WriteLine("  food items loaded!");
+                Console.WriteLine("  customers loaded!");
+                Console.WriteLine("  orders loaded!");
                 Console.Write("Choice: ");
                 string choice = Console.ReadLine();
-
-                switch (choice)
-                {
-                    case "1": ListRestaurants(); break;
-                    case "2": CreateOrder(); break;
-                    case "3": ModifyOrder(); break;
-                    case "0": return;
-                    default: Console.WriteLine("Invalid choice"); break;
-                }
             }
         }
     }
