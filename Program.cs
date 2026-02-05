@@ -8,7 +8,7 @@ using PRGAssignment;
 using System;
 using System.Collections.Generic;
 
-// ==================== Feature 2: Load CSVs ====================
+//Feature 2: Load CSVs
 static void LoadCustomers()
 {
     customers.Clear();
@@ -80,7 +80,7 @@ static void LoadOrders()
     }
 }
 
-// ==================== Feature 3: List Restaurants & Menu ====================
+//Feature 3: List Restaurants & Menu
 static void ListRestaurants()
 {
     foreach (var r in restaurants)
