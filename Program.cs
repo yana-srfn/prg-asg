@@ -6,6 +6,7 @@
 using PRGAssignment;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -14,48 +15,56 @@ using System.Linq;
 // 1.
 List<Restaurant> restaurants = new List<Restaurant>();
 //Load Files
+//Restaurants File 
 void LoadRestaurants(string path)
 {
-    foreach (var line in File.ReadAllLines(path).Skip(1))
+    String[] lines = File.ReadAllLines("restaurants.csv");
+    for (int i = 1; i < lines.Length; i++)
     {
-        var p = line.Split(',');
-        restaurants.Add(new Restaurant(p[0], p[1], p[2]));
+        string[] data = lines[i].Split(',');
+        string id = data[0];
+        string Name = data[1];
+        string Email = data[2];
+        Restaurant restaurant = new Restaurant();
+        restaurants.Add(restaurant);
     }
-}
+LoadRestaurants("restaurants.csv");
+
+//FoodItems File
 void LoadFoodItems(string path)
 {
-    foreach (var line in File.ReadAllLines(path).Skip(1))
+    String[] lines =File.ReadAllLines("fooditems.csv");
+    for (int i = 1; i < lines.Length; i++)
     {
-        var p = line.Split(',');
-        string restId = p[0].Trim();
-        string itemName = p[1].Trim();
-        string itemDesc = p[2].Trim();
-        double itemPrice = double.Parse(p[3].Trim(), CultureInfo.InvariantCulture);
-
-        Restaurant r = restaurants.FirstOrDefault(x => x.GetRestaurantId() == restId);
-        if (r == null) continue;
-
-        // Ensure the restaurant has at least 1 menu (Main Menu)
-        if (r.GetMenus().Count == 0)
-        {
-            r.AddMenu(new Menu("M1", "Main Menu"));
-        }
+        string[] data = lines[i].Split(',');
+        string restId = data[0];
+        string itemName = data[1];
+        string itemDesc = data[2];
+        double itemPrice = Convert.ToDouble(data[3]);
 
         // Create food item (customise not in CSV -> empty string)
         FoodItem fi = new FoodItem(itemName, itemDesc, itemPrice, "");
-
-        // Add food item into the first menu
-        r.GetMenus()[0].AddFoodItem(fi);
+        foreach (Restaurant r in restaurants)
+        {
+            if (r.RestaurantId == restId)
+            {
+                foreach (Menu menu in r.Menus)
+                {
+                    menu.AddFoodItem(fi);
+                }
+            }
+            else
+            { continue; }
+        }    
     }
 }
-LoadRestaurants("restaurants.csv");
 LoadFoodItems("fooditems.csv");
 
 
 // Feature 1: List restaurants & food items
 foreach (var r in restaurants)
 {
-        Console.WriteLine($"Restaurant: {r.GetRestaurantName()}");
+        Console.WriteLine($"Restaurant: {r.RestaurantName}");
 
         // Restaurant contains menus, menus contain food items
         r.DisplayMenu();

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 
@@ -30,16 +31,39 @@ namespace PRGAssignment
             get { return restaurantEmail; }
             set { restaurantEmail = value; }
         }
-        public List<Menu> GetMenus() { return menus; }
+        public List<Menu> Menus
+        { 
+            get { return menus; } 
+            set { Menus  = value; }
+        }
+
+        public Queue<Order> orderQueue
+        {
+            get { return orderQueue; }
+            set { orderQueue = value; }
+        }
+        // default
+        public Restaurant()
+        {
+            menus = new List<Menu>();
+            orderQueue = new Queue<Order>();
+        }
+        //parameterized
+        public Restaurant(string id, string name, string email)
+        {
+            restaurantId = id;
+            restaurantName = name;
+            restaurantEmail = email;
+        }
 
         // +DisplayMenu() : void
         public void DisplayMenu()
         {
             // Show each menu and its food items
-            foreach (Menu m in menus)
+            foreach (Menu menu in menus)
             {
-                Console.WriteLine($"Menu: {m.ToString()}");
-                m.DisplayFoodItems();
+                Console.WriteLine(menu);
+                menu.DisplayFoodItems();
             }
         }
         // +AddMenu(Menu) : void
@@ -57,17 +81,18 @@ namespace PRGAssignment
         // (These are in diagram but you can implement later)
         public void DisplayOrders()
         {
-            Console.WriteLine("DisplayOrders() not implemented yet.");
+            Console.WriteLine(order);
         }
         public void DisplaySpecialOffers()
         {
-            Console.WriteLine("DisplaySpecialOffers() not implemented yet.");
+            Console.WriteLine();
         }
 
         public override string ToString()
         {
-            return { restaurantId }
-            ;
+            return "RestaurantID: " + restaurantId + "\n"
+                + "Restaurant Name: " + restaurantName + "\n"
+                + "Restaurant Email" + restaurantEmail + "\n";
         }
     }
 
