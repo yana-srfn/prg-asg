@@ -44,9 +44,46 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
+//Main Part
+// Declare lists first
+List<Restaurant> restaurants = new List<Restaurant>();
+List<Customer> customers = new List<Customer>();
+List<Order> orders = new List<Order>();
+
+// Load files (your existing load methods)
+void LoadCustomers(string path)
+{
+
+}
+void LoadOrders(string path);
+{
+    Console.WriteLine();
+}
+
+LoadRestaurants("restaurants.csv");
+LoadCustomers("customers.csv");
+LoadOrders("orders.csv");
+
+//After loading, compute total food items
+int totalFoodItems = GetTotalFoodItemCount(restaurants);
+
+//Print the startup message
+PrintStartupMessage(restaurants.Count, totalFoodItems, customers.Count, orders.Count);
+
+// Then show menu loop...
+void PrintStartupMessage(int restaurantCount, int foodItemCount, int customerCount, int orderCount)
+{
+    Console.WriteLine("Welcome to the Gruberoo Food Delivery System");
+    Console.WriteLine($"{restaurantCount} restaurants loaded!");
+    Console.WriteLine($"{foodItemCount} food items loaded!");
+    Console.WriteLine($"{customerCount} customers loaded!");
+    Console.WriteLine($"{orderCount} orders loaded!");
+    Console.WriteLine();
+}
+
 
 // 1.
-List<Restaurant> restaurants = new List<Restaurant>();
+List<Restaurant> restaurants1 = new List<Restaurant>();
 //Load Files
 //Restaurants File 
 void LoadRestaurants(string path)

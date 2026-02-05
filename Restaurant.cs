@@ -13,6 +13,7 @@ namespace PRGAssignment
         // Relationship
         private List<Menu> menu = new List<MenuCommand>();
         private Queue<Order> orderQueue;
+        internal static readonly int Count;
 
         public string RestaurantId
         {
