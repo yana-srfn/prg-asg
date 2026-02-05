@@ -52,6 +52,9 @@ namespace PRGAssignment
             {
                 string[] cols = lines[i].Split(',');
 
+                if (cols.Length < 8)
+                    continue;
+
                 Order o = new Order
                 {
                     OrderId = cols[0],
@@ -63,6 +66,7 @@ namespace PRGAssignment
                 orders.Add(o);
             }
         }
+
 
 
         //Feature 3: List Restaurants & Menu
