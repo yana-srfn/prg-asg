@@ -76,7 +76,6 @@ namespace PRGAssignment
         }
 
 
-
         //Feature 3: List Restaurants & Menu
         static void ListRestaurants()
         {
@@ -94,14 +93,14 @@ namespace PRGAssignment
         }
 
         //Feature 5: Create New Order 
-        static void CreateNewOrder(Customer customer, Restaurant restaurant, List<FoodItem> foodItems, string deliveryAddress)
+        static void CreateNewOrder(Customer customer, Restaurant restaurant, List<FoodItem> items, string deliveryAddress)
         {
             Order newOrder = new Order
             {
-                OrderId = Guid.NewGuid().ToString(),
+                OrderId = Guid.NewGuid().ToString(), //WHATS GUID?
                 Customer = customer,
                 Restaurant = restaurant,
-                Items = foodItems,
+                Items = items,
                 DeliveryAddress = deliveryAddress,
                 Status = "Pending",
                 TotalAmount = 0m
