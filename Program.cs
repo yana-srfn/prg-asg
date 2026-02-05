@@ -52,21 +52,28 @@ namespace PRGAssignment
             {
                 string[] cols = lines[i].Split(',');
 
-                if (cols.Length < 8)
+                if (cols.Length < 10)
                     continue;
 
                 Order o = new Order
                 {
                     OrderId = cols[0],
-                    DeliveryAddress = cols[4],
-                    TotalAmount = decimal.Parse(cols[6]),
-                    Status = cols[7]
+                    DeliveryAddress = cols[5],
+                    Status = cols[8]
                 };
+
+                if (decimal.TryParse(cols[7], out decimal total))
+                {
+                    o.TotalAmount = total;
+                }
+                else
+                {
+                    o.TotalAmount = 0m;
+                }
 
                 orders.Add(o);
             }
         }
-
 
 
 
