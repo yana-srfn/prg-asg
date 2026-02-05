@@ -19,30 +19,6 @@ static void LoadCustomers()
     }
 }
 
-static void LoadRestaurants()
-{
-    restaurants.Clear();
-    foreach (var line in File.ReadAllLines(@"Data-Files\restaurants.csv").Skip(1))
-    {
-        var fields = line.Split(',');
-        restaurants.Add(new Restaurant { RestaurantId = fields[0], Name = fields[1], Email = fields[2] });
-    }
-}
-
-static void LoadFoodItems()
-{
-    foodItems.Clear();
-    foreach (var line in File.ReadAllLines(@"Data-Files\fooditems.csv").Skip(1))
-    {
-        var fields = line.Split(',');
-        var item = new FoodItem { RestaurantId = fields[0], ItemName = fields[1], Description = fields[2], Price = decimal.Parse(fields[3]) };
-        foodItems.Add(item);
-
-        var rest = restaurants.FirstOrDefault(r => r.RestaurantId == item.RestaurantId);
-        if (rest != null) rest.MenuItems.Add(item);
-    }
-}
-
 static void LoadOrders()
 {
     orders.Clear();
