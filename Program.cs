@@ -24,7 +24,7 @@ namespace PRGAssignment
         //Feature 2: Load CSVs
         static void LoadCustomers()
         {
-            string[] lines = File.ReadAllLines("Data/customers.csv");
+            string[] lines = File.ReadAllLines("Data-Files/customers.csv");
 
             for (int i = 1; i < lines.Length; i++)
             {
