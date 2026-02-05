@@ -46,7 +46,7 @@ namespace PRGAssignment
 
         static void LoadOrders()
         {
-            string[] lines = File.ReadAllLines("Data/orders.csv");
+            string[] lines = File.ReadAllLines("Data-Files/orders.csv");
 
             for (int i = 1; i < lines.Length; i++)
             {
@@ -66,6 +66,7 @@ namespace PRGAssignment
                 orders.Add(o);
             }
         }
+
 
 
 
