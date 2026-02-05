@@ -92,5 +92,26 @@ namespace PRGAssignment
                 Console.WriteLine();
             }
         }
+
+        //Feature 5: Create New Order 
+        static void CreateNewOrder(Customer customer, Restaurant restaurant, List<FoodItem> foodItems, string deliveryAddress)
+        {
+            Order newOrder = new Order
+            {
+                OrderId = Guid.NewGuid().ToString(),
+                Customer = customer,
+                Restaurant = restaurant,
+                Items = foodItems,
+                DeliveryAddress = deliveryAddress,
+                Status = "Pending",
+                TotalAmount = 0m
+            };
+            foreach (var item in foodItems)
+            {
+                newOrder.TotalAmount += item.Price;
+            }
+            orders.Add(newOrder);
+            Console.WriteLine($"New order created with ID: {newOrder.OrderId}, Total Amount: ${newOrder.TotalAmount:F2}");
+        }
     }
 }
