@@ -32,7 +32,6 @@ namespace PRGAssignment
 
                 Customer c = new Customer
                 {
-                    CustomerID = int.Parse(cols[0]),
                     Name = cols[1],
                     Email = cols[2]
                 };
@@ -51,15 +50,16 @@ namespace PRGAssignment
 
                 Order o = new Order
                 {
-                    OrderID = int.Parse(cols[0]),
-                    CustomerID = int.Parse(cols[1]),
-                    FoodItemID = int.Parse(cols[2]),
-                    Quantity = int.Parse(cols[3])
+                    OrderId = cols[0],
+                    DeliveryAddress = cols[4],
+                    TotalAmount = decimal.Parse(cols[6]),
+                    Status = cols[7]
                 };
 
                 orders.Add(o);
             }
         }
+
 
         //Feature 3: List Restaurants & Menu
         static void ListRestaurants()
