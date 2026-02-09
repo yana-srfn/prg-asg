@@ -252,7 +252,7 @@ void ListAllOrders(List<Order> orders)
         string restaurantName = "-";
 
         //get the customer's name
-        if (order.Customer != null)
+        if (order.Customer.CustomerName != null)
             customerName = order.Customer.Name;
 
         //get the restaurant's name
@@ -265,7 +265,7 @@ void ListAllOrders(List<Order> orders)
             customerName,                                            //Customer name
             restaurantName,                                         //Restaurant name
             order.DeliveryDateTime.ToString("dd/MM/yyyy HH:mm"),   // Delivery date and time
-            order.TotalAmount,                                    // Total amount
+            order.CalculateOrderTotal                             // Total amount
             order.Status);                                       // Order status
     }
 }
