@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Order
 {
-    // ===== attributes =====
+    //===== attributes =====
     private int orderId;
     private DateTime orderDateTime;
     private double orderTotal;
@@ -16,7 +16,7 @@ public class Order
 
     private List<OrderedFoodItem> orderedFoodItems;
 
-    // ===== constructor =====
+    //===== constructor =====
     public Order(int orderId, DateTime orderDateTime, DateTime deliveryDateTime, string deliveryAddress)
     {
         this.orderId = orderId;
@@ -29,13 +29,13 @@ public class Order
         orderedFoodItems = new List<OrderedFoodItem>();
     }
 
-    // ===== property =====
+    //===== property =====
     public int OrderId
     {
         get { return orderId; }
     }
 
-    // ===== methods  =====
+    //===== methods  =====
     public double CalculateOrderTotal()
     {
         orderTotal = 0;
@@ -71,4 +71,3 @@ public class Order
         return $"Order ID: {orderId}, Total: ${CalculateOrderTotal():0.00}, Status: {orderStatus}";
     }
 }
-
