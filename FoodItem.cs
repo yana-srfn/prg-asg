@@ -9,9 +9,46 @@ namespace PRGAssignment
 {
     public class FoodItem
     {
-        public string RestaurantId { get; set; }
-        public string ItemName { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
+        private string itemName;
+        private string itemDesc;
+        private double itemPrice;
+        private string customise;
+
+        // Constructor
+        public FoodItem(string name, string desc, double price, string custom)
+        {
+            itemName = name;
+            itemDesc = desc;
+            itemPrice = price;
+            customise = custom;
+        }
+
+        // Get
+        public string GetItemName()
+        {
+            return itemName;
+        }
+        public string GetItemDesc()
+        {
+            return itemDesc;
+        }
+        public double GetItemPrice()
+        {
+            return itemPrice;
+        }
+        public string GetCustomise()
+        {
+            return customise;
+        }
+        public override string ToString()
+        {
+            // If customise is empty, don’t show it
+            if (string.IsNullOrWhiteSpace(customise))
+                return $"{itemName}: {itemDesc} (${itemPrice:0.00})";
+
+            return $"{itemName}: {itemDesc} (${itemPrice:0.00}) | Customise: {customise}";
+        }
     }
 }
+
+
