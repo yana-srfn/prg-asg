@@ -12,63 +12,57 @@ namespace PRGAssignment
 {
     public class Order
     {
-        // ===== attributes =====
-        private int orderId;
-        private DateTime orderDateTime;
-        private double orderTotal;
-        private string orderStatus;
-        private DateTime deliveryDateTime;
-        private string deliveryAddress;
-        private string orderPaymentMethod;
-        private bool orderPaid;
+        // ===== properties (public) =====
+        public int OrderId { get; set; }
+        public DateTime OrderDateTime { get; set; }
+        public double OrderTotal { get; set; }
+        public string OrderStatus { get; set; }
+        public DateTime DeliveryDateTime { get; set; }
+        public string DeliveryAddress { get; set; }
+        public string OrderPaymentMethod { get; set; }
+        public bool OrderPaid { get; set; }
 
-        private List<OrderedFoodItem> orderedFoodItems;
+        public List<OrderedFoodItem> OrderedFoodItems { get; set; }
 
         // ===== constructor =====
         public Order(int orderId, DateTime orderDateTime, DateTime deliveryDateTime, string deliveryAddress)
         {
-            this.orderId = orderId;
-            this.orderDateTime = orderDateTime;
-            this.deliveryDateTime = deliveryDateTime;
-            this.deliveryAddress = deliveryAddress;
+            OrderId = orderId;
+            OrderDateTime = orderDateTime;
+            DeliveryDateTime = deliveryDateTime;
+            DeliveryAddress = deliveryAddress;
 
-            orderStatus = "Pending";
-            orderPaid = false;
-            orderedFoodItems = new List<OrderedFoodItem>();
-        }
-
-        // ===== property =====
-        public int OrderId
-        {
-            get { return orderId; }
+            OrderStatus = "Pending";
+            OrderPaid = false;
+            OrderedFoodItems = new List<OrderedFoodItem>();
         }
 
         // ===== methods =====
         public double CalculateOrderTotal()
         {
-            orderTotal = 0;
+            OrderTotal = 0;
 
-            foreach (OrderedFoodItem item in orderedFoodItems)
+            foreach (OrderedFoodItem item in OrderedFoodItems)
             {
-                orderTotal += item.CalculateSubtotal();
+                OrderTotal += item.CalculateSubtotal();
             }
 
-            return orderTotal;
+            return OrderTotal;
         }
 
         public void AddOrderedFoodItem(OrderedFoodItem item)
         {
-            orderedFoodItems.Add(item);
+            OrderedFoodItems.Add(item);
         }
 
         public bool RemoveOrderedFoodItem(OrderedFoodItem item)
         {
-            return orderedFoodItems.Remove(item);
+            return OrderedFoodItems.Remove(item);
         }
 
         public void DisplayOrderedFoodItems()
         {
-            foreach (OrderedFoodItem item in orderedFoodItems)
+            foreach (OrderedFoodItem item in OrderedFoodItems)
             {
                 Console.WriteLine(item);
             }
@@ -76,7 +70,7 @@ namespace PRGAssignment
 
         public override string ToString()
         {
-            return $"Order ID: {orderId}, Total: ${CalculateOrderTotal():0.00}, Status: {orderStatus}";
+            return $"Order ID: {OrderId}, Total: ${CalculateOrderTotal():0.00}, Status: {OrderStatus}";
         }
     }
 }
