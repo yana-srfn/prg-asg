@@ -23,6 +23,10 @@ namespace PRGAssignment
         // Restaurant receives 0..* Orders
         private Queue<Order> orderQueue;
 
+        public Restaurant() 
+        {
+        }
+
         public Restaurant(string restaurantId, string restaurantName, string restaurantEmail)
         {
             this.restaurantId = restaurantId;
@@ -51,6 +55,8 @@ namespace PRGAssignment
             get { return restaurantEmail; }
             set { restaurantEmail = value; }
         }
+
+        public IEnumerable<Menu> Menus { get; internal set; }
 
         public void AddMenu(Menu menu)
         {
