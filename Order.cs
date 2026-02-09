@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class Order
 {
+    // ===== attributes =====
     private int orderId;
     private DateTime orderDateTime;
     private double orderTotal;
@@ -13,17 +14,61 @@ public class Order
     private string orderPaymentMethod;
     private bool orderPaid;
 
+    private List<OrderedFoodItem> orderedFoodItems;
 
-    public int OrderId { get; set; }
-    public double CalculateOrderTotal() { return orderTotal; }
-    public void AddOrderedFoodItem(FoodItem item, int quantity) { }
+    // ===== constructor =====
+    public Order(int orderId, DateTime orderDateTime, DateTime deliveryDateTime, string deliveryAddress)
+    {
+        this.orderId = orderId;
+        this.orderDateTime = orderDateTime;
+        this.deliveryDateTime = deliveryDateTime;
+        this.deliveryAddress = deliveryAddress;
 
-    public bool RemoveOrderedFoodItem(FoodItem item) { return true; }
-    public void DisplayOrderedFoodItems() { }
+        orderStatus = "Pending";
+        orderPaid = false;
+        orderedFoodItems = new List<OrderedFoodItem>();
+    }
+
+    // ===== property =====
+    public int OrderId
+    {
+        get { return orderId; }
+    }
+
+    // ===== methods  =====
+    public double CalculateOrderTotal()
+    {
+        orderTotal = 0;
+
+        foreach (OrderedFoodItem item in orderedFoodItems)
+        {
+            orderTotal += item.CalculateSubtotal();
+        }
+
+        return orderTotal;
+    }
+
+    public void AddOrderedFoodItem(OrderedFoodItem item)
+    {
+        orderedFoodItems.Add(item);
+    }
+
+    public bool RemoveOrderedFoodItem(OrderedFoodItem item)
+    {
+        return orderedFoodItems.Remove(item);
+    }
+
+    public void DisplayOrderedFoodItems()
+    {
+        foreach (OrderedFoodItem item in orderedFoodItems)
+        {
+            Console.WriteLine(item);
+        }
+    }
 
     public override string ToString()
     {
-        return $"Order ID: {OrderId}, Total Amount: {orderTotal}, Status: {orderStatus}";
+        return $"Order ID: {orderId}, Total: ${CalculateOrderTotal():0.00}, Status: {orderStatus}";
     }
-
 }
+
