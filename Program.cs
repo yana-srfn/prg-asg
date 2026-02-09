@@ -1,8 +1,10 @@
 //==========================================================
 // Student Number : S10275337C
 // Student Name : Dayana Sharafeena
-// Partner Name : Ng Sook Min Calista
+// Student Number : S10268653
+// Student Name : Ng Sook Min Calista
 //==========================================================
+
 using PRGAssignment;
 using System;
 using System.Collections.Generic;
@@ -54,7 +56,10 @@ void LoadRestaurants()
         string[] r = line.Split(',');
         restaurants.Add(new Restaurant(r[0], r[1], r[2]));
     }
-}
+    else
+    {
+        Console.WriteLine("Invalid choice. Please try again.");
+    }
 
 void LoadFoodItems()
 {
