@@ -1,21 +1,129 @@
+//==========================================================
+// Student Number : S10275337C
+// Student Name : Dayana Sharafeena
+// Student Number : S10268653
+// Student Name : Ng Sook Min Calista
+//==========================================================
+
+using PRGAssignment;
 using System;
 using System.Collections.Generic;
 
-namespace PRGAssignment
-{
-    class Program
-    {
-        // ==================== Shared Lists ====================
-        public static List<Customer> customers = new List<Customer>();
-        public static List<Restaurant> restaurants = new List<Restaurant>();
-        public static List<FoodItem> foodItems = new List<FoodItem>();
-        public static List<Order> orders = new List<Order>();
-        public static List<SpecialOffer> specialOffers = new List<SpecialOffer>();
+//Main Part
+// Declare lists first
+List<Restaurant> restaurants = new List<Restaurant>();
+List<Customer> customers = new List<Customer>();
+List<Order> orders = new List<Order>();
 
-        static void Main(string[] args)
-        {
-            // You can optionally call features here for testing
-            Console.WriteLine("Master branch loaded with shared lists.");
-        }
+// Load files (your existing load methods)
+void LoadRestaurants(string path)
+{
+    // read restaurants.csv
+}
+
+void LoadCustomers(string path)
+{
+    // read customers.csv
+}
+
+void LoadOrders(string path)
+{
+    // read orders.csv
+}
+void PrintStartupMessage(int restaurantCount, int foodItemCount, int customerCount, int orderCount)
+{
+    Console.WriteLine("Welcome to the Gruberoo Food Delivery System");
+    Console.WriteLine($"{restaurantCount} restaurants loaded!");
+    Console.WriteLine($"{foodItemCount} food items loaded!");
+    Console.WriteLine($"{customerCount} customers loaded!");
+    Console.WriteLine($"{orderCount} orders loaded!");
+    Console.WriteLine();
+}
+
+LoadRestaurants("restaurants.csv");
+LoadCustomers("customers.csv");
+LoadOrders("orders.csv");
+
+//After loading, compute total food items
+/*int GetTotalFoodItemCount(List<Restaurant> restaurants)
+{
+    int total = 0;
+    for (int i = 0; i < restaurants.Count; i++)
+    {
+        total += restaurants[i].menu.foodItems.Count;
     }
+    return total;
+}*/
+
+
+// Startup output (matches assignment screenshot)
+PrintStartupMessage(
+    restaurants.Count,
+     0,                 // TEMP: food items count
+    customers.Count,
+    orders.Count
+);
+
+// MAIN MENU LOOP
+while (true)
+{
+    Console.WriteLine("===== Gruberoo Food Delivery System =====");
+    Console.WriteLine("1. List all restaurants and menu items");
+    Console.WriteLine("2. List all orders");
+    Console.WriteLine("3. Create a new order");
+    Console.WriteLine("4. Process an order");
+    Console.WriteLine("5. Modify an existing order");
+    Console.WriteLine("6. Delete an existing order");
+    Console.WriteLine("0. Exit");
+    Console.Write("Enter your choice: ");
+
+    string choice = Console.ReadLine();
+    Console.WriteLine();
+
+    if (choice == "1")
+    {
+        // Feature 1 
+
+    }
+    else if (choice == "2")
+    {
+        // Feature 2
+
+    }
+    else if (choice == "3")
+    {
+        // Feature 3
+
+    }
+    else if (choice == "4")
+    {
+        // Feature 4
+
+    }
+    else if (choice == "5")
+    {
+        // Feature 5
+
+    }
+    else if (choice == "6")
+    {
+        // Feature 6
+
+    }
+    else if (choice == "7")
+    {
+        // Feature 7
+
+    }
+    else if (choice == "0")
+    {
+        Console.WriteLine("Exiting system...");
+        break;
+    }
+    else
+    {
+        Console.WriteLine("Invalid choice. Please try again.");
+    }
+
+    Console.WriteLine();
 }
