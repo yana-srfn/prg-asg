@@ -14,14 +14,14 @@ namespace PRGAssignment
         private string menuId;
         private string menuName;
         private List<FoodItem> foodItems;
-
+       
         public Menu(string menuId, string menuName)
         {
             this.menuId = menuId;
             this.menuName = menuName;
             foodItems = new List<FoodItem>();
         }
-
+       
         public string MenuId
         {
             get { return menuId; }
@@ -36,7 +36,7 @@ namespace PRGAssignment
 
         public void AddFoodItem(FoodItem foodItem)
         {
-            foodItems.Add(foodItem);
+            foodItems.Add(foodItem); 
         }
 
         public bool RemoveFoodItem(FoodItem foodItem)

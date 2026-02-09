@@ -42,7 +42,7 @@ namespace PRGAssignment
         }
         public override string ToString()
         {
-            // If customise is empty, don’t show it
+            // If customise is empty, donâ€™t show it
             if (string.IsNullOrWhiteSpace(customise))
                 return $"{itemName}: {itemDesc} (${itemPrice:0.00})";
 
@@ -50,5 +50,3 @@ namespace PRGAssignment
         }
     }
 }
-
-
