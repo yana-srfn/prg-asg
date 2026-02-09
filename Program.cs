@@ -21,8 +21,6 @@ LoadCustomers();
 LoadRestaurants();
 LoadFoodItems();
 LoadOrders();
-LoadOrderedFoodItems();
-
 
 while (true)
 {
@@ -37,10 +35,11 @@ while (true)
     else if (choice == "2") CreateNewOrder();
     else if (choice == "3") ModifyOrder();
     else if (choice == "0") break;
+    else Console.WriteLine("Invalid choice. Please try again.");
 }
 
 // =================================================
-// FEATURE 2: LOAD FILES (customers & orders)
+// FEATURE 2: LOAD FILES
 // =================================================
 void LoadCustomers()
 {
@@ -58,10 +57,7 @@ void LoadRestaurants()
         string[] r = line.Split(',');
         restaurants.Add(new Restaurant(r[0], r[1], r[2]));
     }
-    else
-    {
-        Console.WriteLine("Invalid choice. Please try again.");
-    }
+}
 
 void LoadFoodItems()
 {
@@ -96,7 +92,7 @@ void LoadOrders()
 }
 
 // =================================================
-// FEATURE 3: LIST RESTAURANTS & MENU ITEMS
+// FEATURE 3: LIST RESTAURANTS & MENU
 // =================================================
 void ListRestaurants()
 {
@@ -158,7 +154,7 @@ void CreateNewOrder()
     }
 
     double total = order.CalculateOrderTotal() + 5.0;
-    Console.WriteLine($"Order Total: ${order.CalculateOrderTotal():0.00} + $5.00 (delivery) = ${total:0.00}");
+    Console.WriteLine($"Order Total: ${order.CalculateOrderTotal():0.00} + $5.00 = ${total:0.00}");
 
     Console.Write("Proceed to payment? [Y/N]: ");
     if (Console.ReadLine().ToUpper() != "Y") return;
@@ -179,7 +175,7 @@ void CreateNewOrder()
 }
 
 // =================================================
-// FEATURE 7: MODIFY EXISTING ORDER
+// FEATURE 7: MODIFY ORDER
 // =================================================
 void ModifyOrder()
 {
@@ -187,7 +183,10 @@ void ModifyOrder()
     Customer customer = customers.FirstOrDefault(c => c.EmailAddress == Console.ReadLine());
     if (customer == null) return;
 
-    var pendingOrders = customer.OrderList.Where(o => o.ToString().Contains("Pending")).ToList();
+    var pendingOrders = customer.OrderList
+        .Where(o => o.ToString().Contains("Pending"))
+        .ToList();
+
     if (pendingOrders.Count == 0) return;
 
     Console.WriteLine("Pending Orders:");
@@ -198,7 +197,7 @@ void ModifyOrder()
     int id = int.Parse(Console.ReadLine());
     Order order = pendingOrders.First(o => o.OrderId == id);
 
-    Console.WriteLine("Modify: [1] Items [2] Address [3] Delivery Time");
+    Console.WriteLine("Modify: [2] Address [3] Delivery Time");
     string choice = Console.ReadLine();
 
     if (choice == "2")

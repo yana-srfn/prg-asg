@@ -5,64 +5,66 @@
 // Student Name : Ng Sook Min Calista
 //==========================================================
 
-using System.Collections.Generic;
-using PRGAssignment;
 using System;
+using System.Collections.Generic;
 
-public class Customer
+namespace PRGAssignment
 {
-    //===== attributes =====
-    private string emailAddress;
-    private string customerName;
-    private List<Order> orderList;
-
-    //===== constructor =====
-    public Customer(string customerName, string emailAddress)
+    public class Customer
     {
-        this.customerName = customerName;
-        this.emailAddress = emailAddress;
-        orderList = new List<Order>();
-    }
+        // ===== attributes =====
+        private string emailAddress;
+        private string customerName;
+        private List<Order> orderList;
 
-    //===== properties =====
-    public string CustomerName
-    {
-        get { return customerName; }
-        set { customerName = value; }
-    }
-
-    public string EmailAddress
-    {
-        get { return emailAddress; }
-        set { emailAddress = value; }
-    }
-
-    public List<Order> OrderList
-    {
-        get { return orderList; }
-    }
-
-    //===== methods =====
-    public void AddOrder(Order order)
-    {
-        orderList.Add(order);
-    }
-
-    public bool RemoveOrder(Order order)
-    {
-        return orderList.Remove(order);
-    }
-
-    public void DisplayAllOrders()
-    {
-        foreach (Order order in orderList)
+        // ===== constructor =====
+        public Customer(string customerName, string emailAddress)
         {
-            Console.WriteLine(order);
+            this.customerName = customerName;
+            this.emailAddress = emailAddress;
+            orderList = new List<Order>();
         }
-    }
 
-    public override string ToString()
-    {
-        return $"Customer Name: {customerName}, Email Address: {emailAddress}";
+        // ===== properties =====
+        public string CustomerName
+        {
+            get { return customerName; }
+            set { customerName = value; }
+        }
+
+        public string EmailAddress
+        {
+            get { return emailAddress; }
+            set { emailAddress = value; }
+        }
+
+        public List<Order> OrderList
+        {
+            get { return orderList; }
+        }
+
+        // ===== methods =====
+        public void AddOrder(Order order)
+        {
+            orderList.Add(order);
+        }
+
+        public bool RemoveOrder(Order order)
+        {
+            return orderList.Remove(order);
+        }
+
+        public void DisplayAllOrders()
+        {
+            foreach (Order order in orderList)
+            {
+                Console.WriteLine(order);
+            }
+        }
+
+        public override string ToString()
+        {
+            return $"Customer Name: {customerName}, Email Address: {emailAddress}";
+        }
     }
 }
