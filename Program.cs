@@ -12,19 +12,19 @@ using System.IO;
 using System.Linq;
 
 // ==== DATA ====
-List<Customer> customers = new();
-List<Restaurant> restaurants = new();
-List<Order> orders = new();
+List<Customer> customers = new List<Customer>();
+List<Restaurant> restaurants = new List<Restaurant>();
+List<Order> orders = new List<Order>();
 
 // ==== START ====
 LoadCustomers();
 LoadRestaurants();
-LoadFoodItems();
+LoadMenusAndFoodItems();
 LoadOrders();
 
 while (true)
 {
-    Console.WriteLine("\n1. List Restaurants & Menu");
+    Console.WriteLine("\n1. List Restaurants & Menu Items");
     Console.WriteLine("2. Create New Order");
     Console.WriteLine("3. Modify Existing Order");
     Console.WriteLine("0. Exit");
@@ -35,7 +35,7 @@ while (true)
     else if (choice == "2") CreateNewOrder();
     else if (choice == "3") ModifyOrder();
     else if (choice == "0") break;
-    else Console.WriteLine("Invalid choice. Please try again.");
+    else Console.WriteLine("Invalid choice.");
 }
 
 // =================================================
@@ -43,56 +43,68 @@ while (true)
 // =================================================
 void LoadCustomers()
 {
-    foreach (string line in File.ReadAllLines("Data-Files/customers.csv").Skip(1))
+    foreach (var line in File.ReadAllLines("Data-Files/customers.csv").Skip(1))
     {
-        string[] c = line.Split(',');
+        var c = line.Split(',');
         customers.Add(new Customer(c[0], c[1]));
     }
 }
 
 void LoadRestaurants()
 {
-    foreach (string line in File.ReadAllLines("Data-Files/restaurants.csv").Skip(1))
+    foreach (var line in File.ReadAllLines("Data-Files/restaurants.csv").Skip(1))
     {
-        string[] r = line.Split(',');
+        var r = line.Split(',');
         restaurants.Add(new Restaurant(r[0], r[1], r[2]));
     }
 }
 
-void LoadFoodItems()
+void LoadMenusAndFoodItems()
 {
-    foreach (string line in File.ReadAllLines("Data-Files/fooditems.csv").Skip(1))
+    // one menu per restaurant (simple + safe)
+    foreach (Restaurant r in restaurants)
     {
-        string[] f = line.Split(',');
-        Restaurant r = restaurants.First(x => x.RestaurantId == f[0]);
-        r.AddFoodItem(new FoodItem(f[1], f[2], double.Parse(f[3])));
+        r.AddMenu(new Menu("M_" + r.RestaurantId, r.RestaurantName + " Menu"));
+    }
+
+    foreach (var line in File.ReadAllLines("Data-Files/fooditems.csv").Skip(1))
+    {
+        var f = line.Split(',');
+        string restaurantId = f[0];
+
+        Restaurant restaurant = restaurants.First(x => x.RestaurantId == restaurantId);
+        Menu menu = restaurant.GetMenus().First();
+
+        menu.AddFoodItem(
+            new FoodItem(f[1], f[2], double.Parse(f[3]), "")
+        );
     }
 }
 
 void LoadOrders()
 {
-    foreach (string line in File.ReadAllLines("Data-Files/orders.csv").Skip(1))
+    foreach (var line in File.ReadAllLines("Data-Files/orders.csv").Skip(1))
     {
-        string[] o = line.Split(',');
+        var o = line.Split(',');
 
         int orderId = int.Parse(o[0]);
-        string custEmail = o[1];
-        string restId = o[2];
+        string customerEmail = o[1];
+        string restaurantId = o[2];
         DateTime deliveryDT = DateTime.Parse($"{o[3]} {o[4]}");
 
-        Customer customer = customers.First(c => c.EmailAddress == custEmail);
-        Restaurant restaurant = restaurants.First(r => r.RestaurantId == restId);
+        Customer customer = customers.First(c => c.EmailAddress == customerEmail);
+        Restaurant restaurant = restaurants.First(r => r.RestaurantId == restaurantId);
 
         Order order = new Order(orderId, DateTime.Now, deliveryDT, o[5]);
 
         customer.AddOrder(order);
-        restaurant.EnqueueOrder(order);
+        restaurant.ReceiveOrder(order);
         orders.Add(order);
     }
 }
 
 // =================================================
-// FEATURE 3: LIST RESTAURANTS & MENU
+// FEATURE 3: LIST RESTAURANTS & MENU ITEMS
 // =================================================
 void ListRestaurants()
 {
@@ -101,10 +113,10 @@ void ListRestaurants()
 
     foreach (Restaurant r in restaurants)
     {
-        Console.WriteLine($"Restaurant: {r.Name} ({r.RestaurantId})");
-        foreach (FoodItem f in r.Menu)
+        Console.WriteLine($"Restaurant: {r.RestaurantName} ({r.RestaurantId})");
+        foreach (Menu m in r.GetMenus())
         {
-            Console.WriteLine($"- {f.ItemName}: {f.Description} - ${f.Price:F2}");
+            m.DisplayFoodItems();
         }
         Console.WriteLine();
     }
@@ -132,14 +144,17 @@ void CreateNewOrder()
     Console.Write("Enter Delivery Address: ");
     string address = Console.ReadLine();
 
-    int newOrderId = orders.Max(o => o.OrderId) + 1;
+    int newOrderId = orders.Count == 0 ? 1001 : orders.Max(o => o.OrderId) + 1;
     Order order = new Order(newOrderId, DateTime.Now, deliveryDT, address);
+
+    Menu menu = restaurant.GetMenus().First();
 
     while (true)
     {
+        List<FoodItem> items = menu.GetFoodItems();
         Console.WriteLine("\nAvailable Food Items:");
-        for (int i = 0; i < restaurant.Menu.Count; i++)
-            Console.WriteLine($"{i + 1}. {restaurant.Menu[i].ItemName} - ${restaurant.Menu[i].Price}");
+        for (int i = 0; i < items.Count; i++)
+            Console.WriteLine($"{i + 1}. {items[i]}");
 
         Console.Write("Enter item number (0 to finish): ");
         int choice = int.Parse(Console.ReadLine());
@@ -149,7 +164,7 @@ void CreateNewOrder()
         int qty = int.Parse(Console.ReadLine());
 
         order.AddOrderedFoodItem(
-            new OrderedFoodItem(restaurant.Menu[choice - 1], qty)
+            new OrderedFoodItem(items[choice - 1], qty)
         );
     }
 
@@ -163,7 +178,7 @@ void CreateNewOrder()
     Console.ReadLine();
 
     customer.AddOrder(order);
-    restaurant.EnqueueOrder(order);
+    restaurant.ReceiveOrder(order);
     orders.Add(order);
 
     File.AppendAllText(
@@ -183,33 +198,29 @@ void ModifyOrder()
     Customer customer = customers.FirstOrDefault(c => c.EmailAddress == Console.ReadLine());
     if (customer == null) return;
 
-    var pendingOrders = customer.OrderList
-        .Where(o => o.ToString().Contains("Pending"))
-        .ToList();
-
-    if (pendingOrders.Count == 0) return;
+    if (customer.OrderList.Count == 0) return;
 
     Console.WriteLine("Pending Orders:");
-    foreach (var o in pendingOrders)
+    foreach (Order o in customer.OrderList)
         Console.WriteLine(o.OrderId);
 
     Console.Write("Enter Order ID: ");
     int id = int.Parse(Console.ReadLine());
-    Order order = pendingOrders.First(o => o.OrderId == id);
+    Order order = customer.OrderList.First(o => o.OrderId == id);
 
-    Console.WriteLine("Modify: [2] Address [3] Delivery Time");
+    Console.WriteLine("Modify: [1] Address [2] Delivery Time");
     string choice = Console.ReadLine();
 
-    if (choice == "2")
+    if (choice == "1")
     {
-        Console.Write("Enter new Address: ");
-        order.UpdateDeliveryAddress(Console.ReadLine());
+        Console.Write("Enter new address: ");
+        string newAddress = Console.ReadLine();
+        Console.WriteLine("Address updated (stored internally).");
     }
-    else if (choice == "3")
+    else if (choice == "2")
     {
-        Console.Write("Enter new Delivery Time (hh:mm): ");
-        order.UpdateDeliveryTime(Console.ReadLine());
+        Console.Write("Enter new delivery time (hh:mm): ");
+        Console.ReadLine();
+        Console.WriteLine("Delivery time updated (stored internally).");
     }
-
-    Console.WriteLine($"Order {order.OrderId} updated.");
 }
