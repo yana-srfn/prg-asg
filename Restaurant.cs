@@ -17,101 +17,130 @@ namespace PRGAssignment
         private string restaurantName;
         private string restaurantEmail;
 
-        // Relationship
-        private List<Menu> menu = new List<MenuCommand>();
+        private List<Menu> menus;
+        private List<SpecialOffer> specialOffers;
+
+        // Restaurant receives 0..* Orders
         private Queue<Order> orderQueue;
-        internal static readonly int Count;
+
+        public Restaurant(string restaurantId, string restaurantName, string restaurantEmail)
+        {
+            this.restaurantId = restaurantId;
+            this.restaurantName = restaurantName;
+            this.restaurantEmail = restaurantEmail;
+
+            menus = new List<Menu>();
+            specialOffers = new List<SpecialOffer>();
+            orderQueue = new Queue<Order>();
+        }
 
         public string RestaurantId
         {
             get { return restaurantId; }
-            set { restaurantId = value; }            
+            set { restaurantId = value; }
         }
-            
 
         public string RestaurantName
         {
             get { return restaurantName; }
             set { restaurantName = value; }
         }
+
         public string RestaurantEmail
         {
             get { return restaurantEmail; }
             set { restaurantEmail = value; }
         }
-        public List<Menu> Menus
-        { 
-            get { return menus; } 
-            set { Menus  = value; }
-        }
 
-        public Queue<Order> orderQueue
-        {
-            get { return orderQueue; }
-            set { orderQueue = value; }
-        }
-        // default
-        public Restaurant()
-        {
-            menus = new List<Menu>();
-            orderQueue = new Queue<Order>();
-        }
-        //parameterized
-        public Restaurant(string id, string name, string email)
-        {
-            restaurantId = id;
-            restaurantName = name;
-            restaurantEmail = email;
-        }
-
-        // +DisplayMenu() : void
-        public void DisplayMenu()
-        {
-            // Show each menu and its food items
-            foreach (Menu menu in menus)
-            {
-                Console.WriteLine(menu);
-                menu.DisplayFoodItems();
-            }
-        }
-        // +AddMenu(Menu) : void
         public void AddMenu(Menu menu)
         {
             menus.Add(menu);
         }
 
-        // +RemoveMenu(Menu) : bool
         public bool RemoveMenu(Menu menu)
         {
             return menus.Remove(menu);
         }
 
-        // (These are in diagram but you can implement later)
-        public void DisplayOrders()
+        public void DisplayMenu()
         {
-            foreach (Order order in orderQueue)
+            Console.WriteLine($"== {restaurantName} Menus ==");
+
+            if (menus.Count == 0)
             {
-                Console.WriteLine(order);
+                Console.WriteLine("No menus available.");
+                return;
+            }
+
+            foreach (Menu m in menus)
+            {
+                Console.WriteLine(m);
+                Console.WriteLine("-------------------------");
             }
         }
+
         public void DisplaySpecialOffers()
         {
-            foreach(Order order in orderQueue)
+            Console.WriteLine($"== {restaurantName} Special Offers ==");
+
+            if (specialOffers.Count == 0)
             {
-                if(Order.SpecialOffer !=null)
-                {
-                    Console.WriteLine(order.SpecialOffer);
-                }
+                Console.WriteLine("No special offers available.");
+                return;
             }
+
+            foreach (SpecialOffer so in specialOffers)
+            {
+                Console.WriteLine(so);
+            }
+        }
+
+        public void DisplayOrders()
+        {
+            Console.WriteLine($"== {restaurantName} Orders ==");
+
+            if (orderQueue.Count == 0)
+            {
+                Console.WriteLine("No orders in queue.");
+                return;
+            }
+
+            foreach (Order o in orderQueue)
+            {
+                Console.WriteLine(o);
+                Console.WriteLine("-------------------------");
+            }
+        }
+
+        // Extra helpers to match UML relationship
+        public void AddSpecialOffer(SpecialOffer offer)
+        {
+            specialOffers.Add(offer);
+        }
+
+        public bool RemoveSpecialOffer(SpecialOffer offer)
+        {
+            return specialOffers.Remove(offer);
+        }
+
+        public void ReceiveOrder(Order order)
+        {
+            orderQueue.Enqueue(order);
         }
 
         public override string ToString()
         {
-            return "RestaurantID: " + restaurantId + "\n"
-                + "Restaurant Name: " + restaurantName + "\n"
-                + "Restaurant Email" + restaurantEmail + "\n";
+            return $"Restaurant ID: {restaurantId}\n" +
+                   $"Restaurant Name: {restaurantName}\n" +
+                   $"Restaurant Email: {restaurantEmail}\n" +
+                   $"Menus: {menus.Count}\n" +
+                   $"Special Offers: {specialOffers.Count}\n" +
+                   $"Orders in Queue: {orderQueue.Count}";
         }
-    }
 
-}
+        // Optional accessors
+        public List<Menu> GetMenus() => menus;
+        public List<SpecialOffer> GetSpecialOffers() => specialOffers;
+        public Queue<Order> GetOrderQueue() => orderQueue;
+    }
 }
