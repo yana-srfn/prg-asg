@@ -21,6 +21,8 @@ LoadCustomers();
 LoadRestaurants();
 LoadFoodItems();
 LoadOrders();
+LoadOrderedFoodItems();
+
 
 while (true)
 {
