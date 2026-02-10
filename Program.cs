@@ -316,10 +316,195 @@ while (true)
         }
     else if (choice == "6")
     {
-        // Feature 6
+            // Feature 6
+            // Process orders for a specific restaurant (using the restaurant's order queue)
 
-    }
-    else if (choice == "7")
+            // Actions allowed (typical rules):
+            // C = Confirm: only valid if order is Pending  -> change to Preparing
+            // R = Reject : only valid if order is Pending  -> change to Rejected + push to refundStack
+            // S = Skip   : only valid if order is Cancelled -> leave it and move on
+            // D = Deliver: only valid if order is Preparing -> change to Delivered
+
+            //Find a restaurant using Restaurant ID
+            Restaurant FindRestaurantById(List<Restaurant> restaurants, string restId)
+            {
+                for (int i = 0; i < restaurants.Count; i++)
+                {
+                    if (restaurants[i].RestaurantId == restId)
+                        return restaurants[i];
+                }
+                return null; // not found
+            }
+            void ProcessOrder(List<Restaurant> restaurants, Stack<Order> refundStack)
+            {
+                Console.WriteLine("\nProcess Order");
+                Console.WriteLine("=========================");
+
+                //Ask user for Restaurant ID
+                Restaurant selectedRestaurant = null;        //for loop to work 
+                while (selectedRestaurant == null)          // incase user put wrong id
+                {
+                    Console.Write("Enter Restaurant ID: ");
+                    string inputId = Console.ReadLine();
+
+                    // basic empty check
+                    if (string.IsNullOrWhiteSpace(inputId))
+                    {
+                        Console.WriteLine("Restaurant ID cannot be empty.");
+                        continue;
+                    }
+
+                    inputId = inputId.Trim();                                       // Trim() is so that if user put a spacing behind wont have error
+                    selectedRestaurant = FindRestaurantById(restaurants, inputId);
+                    if (selectedRestaurant == null)
+                    {
+                        Console.WriteLine("Invalid Restaurant ID. Try again.");
+                    }
+                }
+
+                //Check if the restaurant queue is empty
+                // Queue is used to ensure orders are processed in the order they are received (FIFO)
+                if (selectedRestaurant.OrderQueue == null || selectedRestaurant.OrderQueue.Count == 0)
+                {
+                    Console.WriteLine("No orders in this restaurant queue.");
+                    return;
+                }
+
+                Console.WriteLine($"\nRestaurant Selected: {selectedRestaurant.RestaurantName}");
+                Console.WriteLine($"Orders in queue: {selectedRestaurant.OrderQueue.Count}");
+
+                // going through each order currently in the queue
+                // IMPORTANT!! If Dequeue, it disappears. -- "rotate" the queue: Dequeue -> process -> Enqueue back
+                int numberOfOrdersToProcess = selectedRestaurant.OrderQueue.Count;
+
+                for (int i = 0; i < numberOfOrdersToProcess; i++)
+                {
+                    // Take the first order out
+                    Order currentOrder = selectedRestaurant.OrderQueue.Dequeue();
+
+                    // Show order details to user
+                    Console.WriteLine("\n-----------------------------------");
+                    Console.WriteLine($"Order ID: {currentOrder.OrderId}");
+
+                    // Customer name (in case null)
+                    if (currentOrder.Customer != null)
+                        Console.WriteLine($"Customer: {currentOrder.Customer.Name}");
+                    else
+                        Console.WriteLine("Customer: -");
+
+                    Console.WriteLine("Ordered Items:");
+
+                    // Show items (in case list is null)
+                    if (currentOrder.Items != null && currentOrder.Items.Count > 0)
+                    {
+                        for (int k = 0; k < currentOrder.Items.Count; k++)
+                        {
+                            // OrderItem has Item + Quantity (common pattern)
+                            FoodItem fi = currentOrder.Items[k].Item;
+                            int qty = currentOrder.Items[k].Quantity;
+
+                            // FoodItem safe name
+                            string itemName = (fi != null) ? fi.GetItemName() : "-";
+                            Console.WriteLine($" {k + 1}. {itemName} x {qty}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine(" (No items)");
+                    }
+
+                    Console.WriteLine($"Delivery: {currentOrder.DeliveryDateTime:dd/MM/yyyy HH:mm}");
+                    Console.WriteLine($"Total Amount: ${currentOrder.TotalAmount:0.00}");
+                    Console.WriteLine($"Current Status: {currentOrder.Status}");
+                    Console.WriteLine("-----------------------------------");
+
+                    //Ask for action
+                    string action = "";
+                    while (true)
+                    {
+                        Console.Write("Choose action [C]onfirm / [R]eject / [S]kip / [D]eliver: ");
+                        action = Console.ReadLine();
+
+                        if (string.IsNullOrWhiteSpace(action))
+                            continue;
+
+                        action = action.Trim().ToUpper();
+
+                        if (action == "C" || action == "R" || action == "S" || action == "D")
+                            break;
+
+                        Console.WriteLine("Invalid choice. Please enter C, R, S, or D.");
+                    }
+
+                    // Update status based on rules
+                    // action C
+                    if (action == "C")
+                    {
+                        // Confirm only makes sense for Pending
+                        if (currentOrder.Status == "Pending")
+                        {
+                            currentOrder.Status = "Preparing";
+                            Console.WriteLine($"Order {currentOrder.OrderId} confirmed. Status changed to Preparing.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Cannot confirm. Only Pending orders can be confirmed.");
+                        }
+                    }
+                    //action R
+                    else if (action == "R")
+                    {
+                        // Reject only makes sense for Pending
+                        if (currentOrder.Status == "Pending")
+                        {
+                            currentOrder.Status = "Rejected";
+
+                            // Push to refund stack (so later you can show refunds or keep record)
+                            refundStack.Push(currentOrder);
+
+                            Console.WriteLine($"Order {currentOrder.OrderId} rejected.");
+                            Console.WriteLine($"Refund of ${currentOrder.TotalAmount:0.00} processed.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Cannot reject. Only Pending orders can be rejected.");
+                        }
+                    }
+                    //action S
+                    else if (action == "S")
+                    {
+                        // Skip is meant for Cancelled orders (we just ignore and move on)
+                        if (currentOrder.Status == "Cancelled")
+                        {
+                            Console.WriteLine($"Order {currentOrder.OrderId} skipped (Cancelled).");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Skip is only valid for Cancelled orders.");
+                        }
+                    }
+                    //action D
+                    else if (action == "D")
+                    {
+                        // Deliver only makes sense when already Preparing
+                        if (currentOrder.Status == "Preparing")
+                        {
+                            currentOrder.Status = "Delivered";
+                            Console.WriteLine($"Order {currentOrder.OrderId} delivered. Status changed to Delivered.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Cannot deliver. Only Preparing orders can be delivered.");
+                        }
+                    }
+                    // Put the order back into the queue so the queue is preserved (important for saving queue.csv later)
+                    selectedRestaurant.OrderQueue.Enqueue(currentOrder);
+                }
+            }
+
+
+        }
+        else if (choice == "7")
     {
             // =================================================
             // FEATURE 7: MODIFY EXISTING ORDER
