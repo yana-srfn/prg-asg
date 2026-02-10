@@ -87,7 +87,9 @@ while (true)
     }
     else if (choice == "2")
     {
-        // Feature 2
+        // =================================================
+        // FEATURE 2: LOAD FILES
+        // =================================================
         void LoadCustomers()
         {
             foreach (var line in File.ReadAllLines("Data-Files/customers.csv").Skip(1))
