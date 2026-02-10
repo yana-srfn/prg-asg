@@ -122,7 +122,24 @@ while (true)
     }
     else if (choice == "3")
     {
-        // Feature 3
+        // =================================================
+        // FEATURE 3: LIST RESTAURANTS & MENU ITEMS
+        // =================================================
+        void ListRestaurants()
+        {
+            Console.WriteLine("\nAll Restaurants and Menu Items");
+            Console.WriteLine("==============================");
+
+            foreach (Restaurant r in restaurants)
+            {
+                Console.WriteLine($"Restaurant: {r.RestaurantName} ({r.RestaurantId})");
+                foreach (Menu m in r.GetMenus())
+                {
+                    m.DisplayFoodItems();
+                }
+                Console.WriteLine();
+            }
+        }
 
     }
     else if (choice == "4")
