@@ -11,32 +11,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-// ==== DATA ====
-List<Customer> customers = new List<Customer>();
-List<Restaurant> restaurants = new List<Restaurant>();
-List<Order> orders = new List<Order>();
-
-// ==== START ====
-LoadCustomers();
-LoadRestaurants();
-LoadMenusAndFoodItems();
-LoadOrders();
-
-while (true)
-{
-    Console.WriteLine("\n1. List Restaurants & Menu Items");
-    Console.WriteLine("2. Create New Order");
-    Console.WriteLine("3. Modify Existing Order");
-    Console.WriteLine("0. Exit");
-    Console.Write("Choice: ");
-    string choice = Console.ReadLine();
-
-    if (choice == "1") ListRestaurants();
-    else if (choice == "2") CreateNewOrder();
-    else if (choice == "3") ModifyOrder();
-    else if (choice == "0") break;
-    else Console.WriteLine("Invalid choice.");
-}
 
 // =================================================
 // FEATURE 2: LOAD FILES
