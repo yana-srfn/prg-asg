@@ -169,35 +169,70 @@ void CreateNewOrder()
 // =================================================
 // FEATURE 7: MODIFY ORDER
 // =================================================
+// =================================================
+// FEATURE 7: MODIFY EXISTING ORDER
+// =================================================
 void ModifyOrder()
 {
+    Console.WriteLine("\nModify Order");
+    Console.WriteLine("============");
+
     Console.Write("Enter Customer Email: ");
     Customer customer = customers.FirstOrDefault(c => c.EmailAddress == Console.ReadLine());
-    if (customer == null) return;
+    if (customer == null)
+    {
+        Console.WriteLine("Customer not found.");
+        return;
+    }
 
-    if (customer.OrderList.Count == 0) return;
+    var pendingOrders = customer.OrderList
+        .Where(o => o.OrderStatus == "Pending")
+        .ToList();
+
+    if (pendingOrders.Count == 0)
+    {
+        Console.WriteLine("No pending orders.");
+        return;
+    }
 
     Console.WriteLine("Pending Orders:");
-    foreach (Order o in customer.OrderList)
+    foreach (Order o in pendingOrders)
+    {
         Console.WriteLine(o.OrderId);
+    }
 
     Console.Write("Enter Order ID: ");
-    int id = int.Parse(Console.ReadLine());
-    Order order = customer.OrderList.First(o => o.OrderId == id);
+    int orderId = int.Parse(Console.ReadLine());
+    Order order = pendingOrders.FirstOrDefault(o => o.OrderId == orderId);
+    if (order == null) return;
 
-    Console.WriteLine("Modify: [1] Address [2] Delivery Time");
+    Console.WriteLine("\nOrder Items:");
+    order.DisplayOrderedFoodItems();
+
+    Console.WriteLine("\nAddress:");
+    Console.WriteLine(order.DeliveryAddress);
+
+    Console.WriteLine("\nDelivery Date/Time:");
+    Console.WriteLine(order.DeliveryDateTime);
+
+    Console.WriteLine("\nModify: [1] Items [2] Address [3] Delivery Time");
     string choice = Console.ReadLine();
 
-    if (choice == "1")
+    if (choice == "2")
     {
-        Console.Write("Enter new address: ");
-        string newAddress = Console.ReadLine();
-        Console.WriteLine("Address updated (stored internally).");
+        Console.Write("Enter new Address: ");
+        order.DeliveryAddress = Console.ReadLine();
+        Console.WriteLine($"Order {order.OrderId} updated. New Address: {order.DeliveryAddress}");
     }
-    else if (choice == "2")
+    else if (choice == "3")
     {
-        Console.Write("Enter new delivery time (hh:mm): ");
-        Console.ReadLine();
-        Console.WriteLine("Delivery time updated (stored internally).");
+        Console.Write("Enter new Delivery Time (hh:mm): ");
+        string newTime = Console.ReadLine();
+
+        DateTime dt = order.DeliveryDateTime;
+        DateTime updatedDT = DateTime.Parse($"{dt:dd/MM/yyyy} {newTime}");
+        order.DeliveryDateTime = updatedDT;
+
+        Console.WriteLine($"Order {order.OrderId} updated. New Delivery Time: {newTime}");
     }
 }
