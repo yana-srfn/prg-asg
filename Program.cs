@@ -88,6 +88,36 @@ while (true)
     else if (choice == "2")
     {
         // Feature 2
+        void LoadCustomers()
+        {
+            foreach (var line in File.ReadAllLines("Data-Files/customers.csv").Skip(1))
+            {
+                var c = line.Split(',');
+                customers.Add(new Customer(c[0], c[1]));
+            }
+        }
+
+        void LoadOrders()
+        {
+            foreach (var line in File.ReadAllLines("Data-Files/orders.csv").Skip(1))
+            {
+                var o = line.Split(',');
+
+                int orderId = int.Parse(o[0]);
+                string customerEmail = o[1];
+                string restaurantId = o[2];
+                DateTime deliveryDT = DateTime.Parse($"{o[3]} {o[4]}");
+
+                Customer customer = customers.First(c => c.EmailAddress == customerEmail);
+                Restaurant restaurant = restaurants.First(r => r.RestaurantId == restaurantId);
+
+                Order order = new Order(orderId, DateTime.Now, deliveryDT, o[5]);
+
+                customer.AddOrder(order);
+                restaurant.ReceiveOrder(order);
+                orders.Add(order);
+            }
+        }
 
     }
     else if (choice == "3")
