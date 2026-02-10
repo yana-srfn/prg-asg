@@ -205,6 +205,50 @@ while (true)
     else if (choice == "4")
     {
         // Feature 4
+        void ListAllOrders(List<Order> orders)
+        {
+            // Print section title
+            Console.WriteLine("\nAll Orders");
+            Console.WriteLine("==========");
+
+            // Print table header
+            Console.WriteLine("{0,-10}{1,-15}{2,-18}{3,-22}{4,-10}{5,-12}",
+                "Order ID", "Customer", "Restaurant", "Delivery Date/Time", "Amount", "Status");
+            Console.WriteLine("{0,-10}{1,-15}{2,-18}{3,-22}{4,-10}{5,-12}",
+                "--------", "--------", "----------", "------------------", "------", "------");
+
+            // Check if there are no orders in the list
+            if (orders.Count == 0)
+            {
+                Console.WriteLine("No orders found.");
+                return;
+            }
+
+            // Loop through each order in the orders list
+            foreach (Order order in orders)
+            {
+                string customerName = "-";
+                string restaurantName = "-";
+
+                //get the customer's name
+                if (order.Customer.CustomerName != null)
+                    customerName = order.Customer.Name;
+
+                //get the restaurant's name
+                if (order.Restaurant != null)
+                    restaurantName = order.Restaurant.RestaurantName;
+
+                // Display the order details in one row
+                Console.WriteLine("{0,-10}{1,-15}{2,-18}{3,-22}${4,-9:0.00}{5,-12}",
+                    order.OrderId,                                            //Order ID
+                    customerName,                                            //Customer name
+                    restaurantName,                                         //Restaurant name
+                    order.DeliveryDateTime.ToString("dd/MM/yyyy HH:mm"),   // Delivery date and time
+                    order.CalculateOrderTotal                             // Total amount
+
+                    order.Status);                                       // Order status
+            }
+        }
 
     }
     else if (choice == "5")
