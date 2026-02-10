@@ -82,7 +82,65 @@ while (true)
 
     if (choice == "1")
     {
-        // Feature 1 
+        // Feature 1
+        List<Restaurant> restaurants1 = new List<Restaurant>();
+        //Load Files
+        //Restaurants File 
+        void LoadRestaurants1(string path)
+        {
+            String[] lines = File.ReadAllLines("restaurants.csv");
+            for (int i = 1; i < lines.Length; i++)
+            {
+                string[] data = lines[i].Split(',');
+                string id = data[0];
+                string Name = data[1];
+                string Email = data[2];
+                Restaurant restaurant = new Restaurant();
+                restaurants.Add(restaurant);
+            }
+        }
+        LoadRestaurants("restaurants.csv");
+
+        //FoodItems File
+        void LoadFoodItems(string path)
+        {
+            String[] lines = File.ReadAllLines("fooditems.csv");
+            for (int i = 1; i < lines.Length; i++)
+            {
+                string[] data = lines[i].Split(',');
+                string restId = data[0];
+                string itemName = data[1];
+                string itemDesc = data[2];
+                double itemPrice = Convert.ToDouble(data[3]);
+
+                // Create food item (customise not in CSV -> empty string)
+                FoodItem fi = new FoodItem(itemName, itemDesc, itemPrice, "");
+                foreach (Restaurant r in restaurants)
+                {
+                    if (r.RestaurantId == restId)
+                    {
+                        foreach (Menu menu in r.Menus)
+                        {
+                            menu.AddFoodItem(fi);
+                        }
+                    }
+                    else
+                    { continue; }
+                }
+            }
+        }
+        LoadFoodItems("fooditems.csv");
+        //List restaurants & food items
+        foreach (var r in restaurants)
+        {
+            Console.WriteLine($"Restaurant: {r.RestaurantName}");
+
+            // Restaurant contains menus, menus contain food items
+            r.DisplayMenu();
+
+            Console.WriteLine();
+        }
+
 
     }
     else if (choice == "2")
