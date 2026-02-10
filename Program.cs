@@ -262,7 +262,8 @@ while (true)
             Console.WriteLine("================");
 
             Console.Write("Enter Customer Email: ");
-            Customer customer = customers.FirstOrDefault(c => c.EmailAddress == Console.ReadLine());
+            string email = Console.ReadLine();
+            Customer customer = customers.FirstOrDefault(c => c.EmailAddress == email);
             if (customer == null)
             {
                 Console.WriteLine("Customer not found.");
@@ -270,7 +271,8 @@ while (true)
             }
 
             Console.Write("Enter Restaurant ID: ");
-            Restaurant restaurant = restaurants.FirstOrDefault(r => r.RestaurantId == Console.ReadLine());
+            string restId = Console.ReadLine();
+            Restaurant restaurant = restaurants.FirstOrDefault(r => r.RestaurantId == restId);
             if (restaurant == null)
             {
                 Console.WriteLine("Restaurant not found.");
@@ -279,8 +281,10 @@ while (true)
 
             Console.Write("Enter Delivery Date (dd/mm/yyyy): ");
             string date = Console.ReadLine();
+
             Console.Write("Enter Delivery Time (hh:mm): ");
             string time = Console.ReadLine();
+
             DateTime deliveryDT = DateTime.Parse($"{date} {time}");
 
             Console.Write("Enter Delivery Address: ");
@@ -289,7 +293,6 @@ while (true)
             int newOrderId = orders.Count == 0 ? 1001 : orders.Max(o => o.OrderId) + 1;
             Order order = new Order(newOrderId, DateTime.Now, deliveryDT, address);
 
-            // ===== select food items =====
             Menu menu = restaurant.GetMenus().First();
             List<FoodItem> foodItems = menu.GetFoodItems();
 
@@ -308,12 +311,42 @@ while (true)
                 Console.Write("Enter quantity: ");
                 int qty = int.Parse(Console.ReadLine());
 
-                order.AddOrderedFoodItem(
-                    new OrderedFoodItem(foodItems[choice - 1], qty)
-                );
+                order.AddOrderedFoodItem(new OrderedFoodItem(foodItems[choice - 1], qty));
             }
 
+            Console.Write("Add special request? [Y/N]: ");
+            string special = Console.ReadLine().ToUpper();
+            if (special == "Y")
+            {
+                Console.Write("Enter special request: ");
+                Console.ReadLine(); // acknowledged only
+            }
+
+            double foodTotal = order.CalculateOrderTotal();
+            double finalTotal = foodTotal + 5.00;
+
+            Console.WriteLine($"Order Total: ${foodTotal:0.00} + $5.00 (delivery) = ${finalTotal:0.00}");
+
+            Console.Write("Proceed to payment? [Y/N]: ");
+            if (Console.ReadLine().ToUpper() != "Y") return;
+
+            Console.Write("Payment method [CC / PP / CD]: ");
+            order.OrderPaymentMethod = Console.ReadLine();
+
+            order.OrderStatus = "Pending";
+
+            customer.AddOrder(order);
+            restaurant.ReceiveOrder(order);
+            orders.Add(order);
+
+            File.AppendAllText(
+                "orders.csv",
+                $"\n{order.OrderId},{customer.EmailAddress},{restaurant.RestaurantId},{date},{time},{address},{DateTime.Now},{finalTotal},Pending"
+            );
+
+            Console.WriteLine($"Order {order.OrderId} created successfully! Status: Pending");
         }
+
     else if (choice == "6")
     {
             // Feature 6
