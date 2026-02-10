@@ -50,37 +50,6 @@ void LoadCustomers()
     }
 }
 
-void LoadRestaurants()
-{
-    foreach (var line in File.ReadAllLines("Data-Files/restaurants.csv").Skip(1))
-    {
-        var r = line.Split(',');
-        restaurants.Add(new Restaurant(r[0], r[1], r[2]));
-    }
-}
-
-void LoadMenusAndFoodItems()
-{
-    // one menu per restaurant (simple + safe)
-    foreach (Restaurant r in restaurants)
-    {
-        r.AddMenu(new Menu("M_" + r.RestaurantId, r.RestaurantName + " Menu"));
-    }
-
-    foreach (var line in File.ReadAllLines("Data-Files/fooditems.csv").Skip(1))
-    {
-        var f = line.Split(',');
-        string restaurantId = f[0];
-
-        Restaurant restaurant = restaurants.First(x => x.RestaurantId == restaurantId);
-        Menu menu = restaurant.GetMenus().First();
-
-        menu.AddFoodItem(
-            new FoodItem(f[1], f[2], double.Parse(f[3]), "")
-        );
-    }
-}
-
 void LoadOrders()
 {
     foreach (var line in File.ReadAllLines("Data-Files/orders.csv").Skip(1))
