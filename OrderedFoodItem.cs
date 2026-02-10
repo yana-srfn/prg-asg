@@ -26,13 +26,13 @@ namespace PRGAssignment
         // ===== methods =====
         public double CalculateSubtotal()
         {
-            subTotal = foodItem.Price * qtyOrdered;
+            subTotal = foodItem.GetItemPrice() * qtyOrdered;
             return subTotal;
         }
 
         public override string ToString()
         {
-            return $"{foodItem.ItemName} - {qtyOrdered}";
+            return $"{foodItem.GetItemName()} - {qtyOrdered}";
         }
     }
 }
