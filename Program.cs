@@ -548,14 +548,15 @@ while (true)
                 Console.WriteLine("============");
 
                 Console.Write("Enter Customer Email: ");
-                Customer customer = customers.FirstOrDefault(c => c.EmailAddress == Console.ReadLine());
+                string email = Console.ReadLine();
+                Customer customer = customers.FirstOrDefault(c => c.EmailAddress == email);
                 if (customer == null)
                 {
                     Console.WriteLine("Customer not found.");
                     return;
                 }
 
-                var pendingOrders = customer.OrderList
+                List<Order> pendingOrders = customer.OrderList
                     .Where(o => o.OrderStatus == "Pending")
                     .ToList();
 
@@ -572,8 +573,8 @@ while (true)
                 }
 
                 Console.Write("Enter Order ID: ");
-                int orderId = int.Parse(Console.ReadLine());
-                Order order = pendingOrders.FirstOrDefault(o => o.OrderId == orderId);
+                int id = int.Parse(Console.ReadLine());
+                Order order = pendingOrders.FirstOrDefault(o => o.OrderId == id);
                 if (order == null) return;
 
                 Console.WriteLine("\nOrder Items:");
@@ -585,27 +586,27 @@ while (true)
                 Console.WriteLine("\nDelivery Date/Time:");
                 Console.WriteLine(order.DeliveryDateTime);
 
-                Console.WriteLine("\nModify: [1] Items [2] Address [3] Delivery Time");
+                Console.WriteLine("\nModify: [1] Address [2] Delivery Time");
                 string choice = Console.ReadLine();
 
-                if (choice == "2")
+                if (choice == "1")
                 {
                     Console.Write("Enter new Address: ");
                     order.DeliveryAddress = Console.ReadLine();
                     Console.WriteLine($"Order {order.OrderId} updated. New Address: {order.DeliveryAddress}");
                 }
-                else if (choice == "3")
+                else if (choice == "2")
                 {
                     Console.Write("Enter new Delivery Time (hh:mm): ");
                     string newTime = Console.ReadLine();
 
-                    DateTime dt = order.DeliveryDateTime;
-                    DateTime updatedDT = DateTime.Parse($"{dt:dd/MM/yyyy} {newTime}");
-                    order.DeliveryDateTime = updatedDT;
+                    DateTime oldDT = order.DeliveryDateTime;
+                    order.DeliveryDateTime = DateTime.Parse($"{oldDT:dd/MM/yyyy} {newTime}");
 
                     Console.WriteLine($"Order {order.OrderId} updated. New Delivery Time: {newTime}");
                 }
             }
+
             else if (choice == "8")
             {
                 //Feature 8
