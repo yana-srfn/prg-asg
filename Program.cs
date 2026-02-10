@@ -149,9 +149,67 @@ while (true)
     }
     else if (choice == "5")
     {
-        // Feature 5
+        // =================================================
+        // FEATURE 5: CREATE NEW ORDER
+        // =================================================
+        void CreateNewOrder()
+        {
+            Console.WriteLine("\nCreate New Order");
+            Console.WriteLine("================");
 
-    }
+            Console.Write("Enter Customer Email: ");
+            Customer customer = customers.FirstOrDefault(c => c.EmailAddress == Console.ReadLine());
+            if (customer == null)
+            {
+                Console.WriteLine("Customer not found.");
+                return;
+            }
+
+            Console.Write("Enter Restaurant ID: ");
+            Restaurant restaurant = restaurants.FirstOrDefault(r => r.RestaurantId == Console.ReadLine());
+            if (restaurant == null)
+            {
+                Console.WriteLine("Restaurant not found.");
+                return;
+            }
+
+            Console.Write("Enter Delivery Date (dd/mm/yyyy): ");
+            string date = Console.ReadLine();
+            Console.Write("Enter Delivery Time (hh:mm): ");
+            string time = Console.ReadLine();
+            DateTime deliveryDT = DateTime.Parse($"{date} {time}");
+
+            Console.Write("Enter Delivery Address: ");
+            string address = Console.ReadLine();
+
+            int newOrderId = orders.Count == 0 ? 1001 : orders.Max(o => o.OrderId) + 1;
+            Order order = new Order(newOrderId, DateTime.Now, deliveryDT, address);
+
+            // ===== select food items =====
+            Menu menu = restaurant.GetMenus().First();
+            List<FoodItem> foodItems = menu.GetFoodItems();
+
+            while (true)
+            {
+                Console.WriteLine("\nAvailable Food Items:");
+                for (int i = 0; i < foodItems.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {foodItems[i].GetItemName()} - ${foodItems[i].GetItemPrice():0.00}");
+                }
+
+                Console.Write("Enter item number (0 to finish): ");
+                int choice = int.Parse(Console.ReadLine());
+                if (choice == 0) break;
+
+                Console.Write("Enter quantity: ");
+                int qty = int.Parse(Console.ReadLine());
+
+                order.AddOrderedFoodItem(
+                    new OrderedFoodItem(foodItems[choice - 1], qty)
+                );
+            }
+
+        }
     else if (choice == "6")
     {
         // Feature 6
