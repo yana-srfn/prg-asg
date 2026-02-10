@@ -68,15 +68,29 @@ void ListRestaurants()
 // =================================================
 // FEATURE 5: CREATE NEW ORDER
 // =================================================
+// =================================================
+// FEATURE 5: CREATE NEW ORDER
+// =================================================
 void CreateNewOrder()
 {
+    Console.WriteLine("\nCreate New Order");
+    Console.WriteLine("================");
+
     Console.Write("Enter Customer Email: ");
     Customer customer = customers.FirstOrDefault(c => c.EmailAddress == Console.ReadLine());
-    if (customer == null) return;
+    if (customer == null)
+    {
+        Console.WriteLine("Customer not found.");
+        return;
+    }
 
     Console.Write("Enter Restaurant ID: ");
     Restaurant restaurant = restaurants.FirstOrDefault(r => r.RestaurantId == Console.ReadLine());
-    if (restaurant == null) return;
+    if (restaurant == null)
+    {
+        Console.WriteLine("Restaurant not found.");
+        return;
+    }
 
     Console.Write("Enter Delivery Date (dd/mm/yyyy): ");
     string date = Console.ReadLine();
@@ -90,14 +104,17 @@ void CreateNewOrder()
     int newOrderId = orders.Count == 0 ? 1001 : orders.Max(o => o.OrderId) + 1;
     Order order = new Order(newOrderId, DateTime.Now, deliveryDT, address);
 
+    // ===== select food items =====
     Menu menu = restaurant.GetMenus().First();
+    List<FoodItem> foodItems = menu.GetFoodItems();
 
     while (true)
     {
-        List<FoodItem> items = menu.GetFoodItems();
         Console.WriteLine("\nAvailable Food Items:");
-        for (int i = 0; i < items.Count; i++)
-            Console.WriteLine($"{i + 1}. {items[i]}");
+        for (int i = 0; i < foodItems.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}. {foodItems[i].GetItemName()} - ${foodItems[i].GetItemPrice():0.00}");
+        }
 
         Console.Write("Enter item number (0 to finish): ");
         int choice = int.Parse(Console.ReadLine());
@@ -107,30 +124,47 @@ void CreateNewOrder()
         int qty = int.Parse(Console.ReadLine());
 
         order.AddOrderedFoodItem(
-            new OrderedFoodItem(items[choice - 1], qty)
+            new OrderedFoodItem(foodItems[choice - 1], qty)
         );
     }
 
-    double total = order.CalculateOrderTotal() + 5.0;
-    Console.WriteLine($"Order Total: ${order.CalculateOrderTotal():0.00} + $5.00 = ${total:0.00}");
+    // ===== special request =====
+    Console.Write("Add special request? [Y/N]: ");
+    string sr = Console.ReadLine().ToUpper();
+    if (sr == "Y")
+    {
+        Console.Write("Enter special request: ");
+        Console.ReadLine(); // acknowledged (no storage required)
+    }
 
+    // ===== calculate total =====
+    double foodTotal = order.CalculateOrderTotal();
+    double finalTotal = foodTotal + 5.00;
+
+    Console.WriteLine($"Order Total: ${foodTotal:0.00} + $5.00 (delivery) = ${finalTotal:0.00}");
+
+    // ===== payment =====
     Console.Write("Proceed to payment? [Y/N]: ");
     if (Console.ReadLine().ToUpper() != "Y") return;
 
     Console.Write("Payment method [CC / PP / CD]: ");
-    Console.ReadLine();
+    order.OrderPaymentMethod = Console.ReadLine();
 
+    order.OrderStatus = "Pending";
+
+    // ===== save order =====
     customer.AddOrder(order);
     restaurant.ReceiveOrder(order);
     orders.Add(order);
 
     File.AppendAllText(
         "Data-Files/orders.csv",
-        $"\n{order.OrderId},{customer.EmailAddress},{restaurant.RestaurantId},{date},{time},{address},{DateTime.Now},{total},Pending"
+        $"\n{order.OrderId},{customer.EmailAddress},{restaurant.RestaurantId},{date},{time},{address},{DateTime.Now},{finalTotal},Pending"
     );
 
     Console.WriteLine($"Order {order.OrderId} created successfully! Status: Pending");
 }
+
 
 // =================================================
 // FEATURE 7: MODIFY ORDER
